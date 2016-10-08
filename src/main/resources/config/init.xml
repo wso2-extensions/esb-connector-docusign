@@ -16,7 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<!-- Method Documentation URL: https://msdn.microsoft.com/en-us/library/azure/dn645542.aspx -->
 <template name="init" xmlns="http://ws.apache.org/ns/synapse">
     <parameter name="apiUrl" description="The url to access the docuSign API."/>
     <parameter name="apiVersion" description="The version of the docusign API."/>

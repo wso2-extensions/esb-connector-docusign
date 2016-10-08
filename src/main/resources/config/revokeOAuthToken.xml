@@ -16,7 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<!-- Method Documentation URL: https://msdn.microsoft.com/en-us/library/azure/dn645542.aspx -->
 <template name="revokeOAuthToken" xmlns="http://ws.apache.org/ns/synapse">
     <parameter name="accessToken" description="An access token that is to be revoked."/>
     <parameter name="hostName" description="The hostname to authenticate docusign."/>

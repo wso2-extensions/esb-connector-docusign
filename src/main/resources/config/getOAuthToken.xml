@@ -16,7 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<!-- Method Documentation URL: https://msdn.microsoft.com/en-us/library/azure/dn645542.aspx -->
 <template name="getOAuthToken" xmlns="http://ws.apache.org/ns/synapse">
     <parameter name="hostName" description="Use password as grantType."/>
     <parameter name="grantType" description="Use password as grantType."/>

@@ -67,39 +67,31 @@
             var intermediaries=mc.getProperty('uri.var.intermediaries');
             var recipientCount=mc.getProperty('uri.var.recipientCount');
             var payload = mc.getPayloadJSON();
-            if(signers != null && signers!="" && signers!="[]")
-            {
+            if(signers != null && signers!="" && signers!="[]") {
                 payload.signers = eval( "(" + signers + ")" );
             }
-            if(carbonCopies != null && carbonCopies!="" && carbonCopies!="[]")
-            {
+            if(carbonCopies != null && carbonCopies!="" && carbonCopies!="[]") {
                 payload.carbonCopies = eval( "(" + carbonCopies + ")" );
             }
-            if(agents != null && agents!="" && agents!="[]")
-            {
+            if(agents != null && agents!="" && agents!="[]") {
                 payload.agents = eval( "(" + agents + ")" );
             }
-            if(certifiedDeliveries != null && certifiedDeliveries!="" && certifiedDeliveries!="[]")
-            {
+            if(certifiedDeliveries != null && certifiedDeliveries!="" && certifiedDeliveries!="[]") {
                 payload.certifiedDeliveries = eval( "(" + certifiedDeliveries + ")" );
             }
             if (currentRoutingOrder != null && currentRoutingOrder != "") {
                 payload.currentRoutingOrder = currentRoutingOrder;
             }
-            if(editors != null && editors!="" && editors!="[]")
-            {
+            if(editors != null && editors!="" && editors!="[]") {
                 payload.editors = eval( "(" + editors + ")" );
             }
-            if(errorDetails != null && errorDetails!="")
-            {
+            if(errorDetails != null && errorDetails!="") {
                 payload.errorDetails = eval( "(" + errorDetails + ")" );
             }
-            if(inPersonSigners != null && inPersonSigners!="" && inPersonSigners!="[]")
-            {
+            if(inPersonSigners != null && inPersonSigners!="" && inPersonSigners!="[]") {
                 payload.inPersonSigners = eval( "(" + inPersonSigners + ")" );
             }
-            if(intermediaries != null && intermediaries!="" && intermediaries!="[]")
-            {
+            if(intermediaries != null && intermediaries!="" && intermediaries!="[]") {
                 payload.intermediaries = eval( "(" + intermediaries + ")" );
             }
             if (recipientCount != null && recipientCount != "") {
