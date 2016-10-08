@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<template name="createEnvelope" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="accountId"
+               description="The accountId of the account that the user is using, returned in the Login response."/>
+    <parameter name="documents" description="The documents to be signed."/>
+    <parameter name="recipients" description="The email addresses of the envelope recipients."/>
+    <parameter name="emailSubject" description="The subject of the email used to send the envelope."/>
+    <parameter name="status" description="The status of the envelope, possible values sent and created."/>
+    <parameter name="templateId" description="The ID of the template being accessed."/>
+    <parameter name="templateRoles"
+               description="Specifies the template recipient. Each roleName in the template must have a recipient assigned to it"/>
+    <sequence>
+        <property name="uri.var.accountId" expression="$func:accountId"/>
+        <property name="uri.var.documents" expression="$func:documents"/>
+        <property name="uri.var.recipients" expression="$func:recipients"/>
+        <property name="uri.var.emailSubject" expression="$func:emailSubject"/>
+        <property name="uri.var.templateId" expression="$func:templateId"/>
+        <property name="uri.var.templateRoles" expression="$func:templateRoles"/>
+        <property name="uri.var.status" expression="$func:status"/>
+        <script language="js"><![CDATA[
+            var documents = mc.getProperty('uri.var.documents');
+            var emailSubject = mc.getProperty('uri.var.emailSubject');
+            var recipients = mc.getProperty('uri.var.recipients');
+            var status = mc.getProperty('uri.var.status');
+            var templateId=mc.getProperty('uri.var.templateId');
+            var templateRoles=mc.getProperty('uri.var.templateRoles');
+            var payload = mc.getPayloadJSON();
+            if (status != null && status != "")
+            {
+                payload.status = status;
+            }
+            if (emailSubject != null && emailSubject != "")
+            {
+                payload.emailSubject = emailSubject;
+            }
+            if (documents != null && documents != "" && documents!="[]")
+            {
+                payload.documents = eval( "(" + documents + ")" );
+            }
+            if (recipients != null && recipients != "")
+            {
+                payload.recipients = eval( "(" + recipients + ")" );
+            }
+            if (templateId != null && templateId != "")
+            {
+                payload.templateId = templateId;
+            }
+             if (templateRoles != null && templateRoles != "" && templateRoles!="[]")
+            {
+                payload.templateRoles = eval( "(" + templateRoles + ")" );
+            }
+            mc.setPayloadJSON(payload);
+            ]]>
+        </script>
+        <filter source="$ctx:docusignBlocking" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <http method="post"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes"/>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <http method="post"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes"/>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
+        <!-- Remove custom Headers from the API Response -->
+        <header name="X-RateLimit-Limit" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Remaining" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Reset" action="remove" scope="transport"/>
+        <header name="X-Content-Type-Options" action="remove" scope="transport"/>
+        <header name="Cache-Control" action="remove" scope="transport"/>
+    </sequence>
+</template>

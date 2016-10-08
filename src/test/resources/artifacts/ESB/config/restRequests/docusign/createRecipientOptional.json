@@ -1,0 +1,14 @@
+{
+  "accessToken": "%s(accessToken)",
+  "apiUrl": "%s(apiUrl)",
+  "apiVersion": "%s(apiVersion)",
+  "accountId": "%s(accountId)",
+  "envelopeId": "%s(envelopeId)",
+  "userName": "%s(userName)",
+  "authenticationMethod": "%s(authenticationMethod)",
+  "clientUserId": "%s(clientUserId)",
+  "email": "%s(email)",
+  "returnUrl": "%s(returnUrl)",
+  "userId": "%s(userId)",
+  "recipientId": "%s(recipientId)"
+}

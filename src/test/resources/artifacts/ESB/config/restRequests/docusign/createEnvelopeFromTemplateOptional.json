@@ -1,0 +1,10 @@
+{
+  "accessToken": "%s(accessToken)",
+  "apiUrl": "%s(apiUrl)",
+  "apiVersion": "%s(apiVersion)",
+  "accountId": "%s(accountId)",
+  "templateId":"%s(templateId)",
+  "emailSubject":"%s(emailSubject)",
+  "templateRoles":%s(templateRoles),
+  "status":"%s(status)"
+}

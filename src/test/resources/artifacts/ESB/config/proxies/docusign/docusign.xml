@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~  WSO2 Inc. licenses this file to you under the Apache License,
+ ~  Version 2.0 (the "License"); you may not use this file except
+ ~  in compliance with the License.
+ ~  You may obtain a copy of the License at
+ ~
+ ~    http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~  Unless required by applicable law or agreed to in writing,
+ ~  software distributed under the License is distributed on an
+ ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~  KIND, either express or implied.  See the License for the
+ ~  specific language governing permissions and limitations
+ ~  under the License.
+-->
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+       name="docusign"
+       startOnLoad="true"
+       statistics="disable"
+       trace="disable"
+       transports="https,http">
+    <target>
+        <inSequence>
+            <property expression="json-eval($.hostName)" name="hostName"/>
+            <property expression="json-eval($.apiUrl)" name="apiUrl"/>
+            <property expression="json-eval($.accessToken)" name="accessToken"/>
+            <property expression="json-eval($.apiVersion)" name="apiVersion"/>
+            <property expression="json-eval($.blocking)" name="blocking"/>
+            <property expression="json-eval($.grantType)" name="grantType"/>
+            <property expression="json-eval($.clientId)" name="clientId"/>
+            <property expression="json-eval($.userName)" name="userName"/>
+            <property expression="json-eval($.password)" name="password"/>
+            <property expression="json-eval($.scope)" name="scope"/>
+            <property expression="json-eval($.includeApiPassword)" name="includeApiPassword"/>
+            <property expression="json-eval($.includeAccountIDGuid)" name="includeAccountIDGuid"/>
+            <property expression="json-eval($.loginSetting)" name="loginSetting"/>
+            <property expression="json-eval($.accountId)" name="accountId"/>
+            <property expression="json-eval($.documents)" name="documents"/>
+            <property expression="json-eval($.recipients)" name="recipients"/>
+            <property expression="json-eval($.emailSubject)" name="emailSubject"/>
+            <property expression="json-eval($.status)" name="status"/>
+            <property expression="json-eval($.templateId)" name="templateId"/>
+            <property expression="json-eval($.templateRoles)" name="templateRoles"/>
+            <property expression="json-eval($.envelopeId)" name="envelopeId"/>
+            <property expression="json-eval($.clientUserId)" name="clientUserId"/>
+            <property expression="json-eval($.email)" name="email"/>
+            <property expression="json-eval($.signerName)" name="signerName"/>
+            <property expression="json-eval($.recipientId)" name="recipientId"/>
+            <property expression="json-eval($.roleName)" name="roleName"/>
+            <property expression="json-eval($.routingOrder)" name="routingOrder"/>
+            <property expression="json-eval($.carbonCopies)" name="carbonCopies"/>
+            <property expression="json-eval($.signers)" name="signers"/>
+            <property expression="json-eval($.agents)" name="agents"/>
+            <property expression="json-eval($.certifiedDeliveries)" name="certifiedDeliveries"/>
+            <property expression="json-eval($.currentRoutingOrder)" name="currentRoutingOrder"/>
+            <property expression="json-eval($.editors)" name="editors"/>
+            <property expression="json-eval($.errorDetails)" name="errorDetails"/>
+            <property expression="json-eval($.inPersonSigners)" name="inPersonSigners"/>
+            <property expression="json-eval($.intermediaries)" name="intermediaries"/>
+            <property expression="json-eval($.recipientCount)" name="recipientCount"/>
+            <property expression="json-eval($.documentId)" name="documentId"/>
+            <property expression="json-eval($.authenticationMethod)" name="authenticationMethod"/>
+            <property expression="json-eval($.returnUrl)" name="returnUrl"/>
+            <property expression="json-eval($.pingFrequency)" name="pingFrequency"/>
+            <property expression="json-eval($.authenticationInstant)" name="authenticationInstant"/>
+            <property expression="$trp:Action" name="transportAction"/>
+            <docusign.init>
+                <apiUrl>{$ctx:apiUrl}</apiUrl>
+                <apiVersion>{$ctx:apiVersion}</apiVersion>
+                <accessToken>{$ctx:accessToken}</accessToken>
+                <blocking>{$ctx:blocking}</blocking>
+            </docusign.init>
+            <switch source="get-property('transportAction')">
+                <case regex="urn:revokeOAuthToken">
+                    <docusign.revokeOAuthToken>
+                        <hostName>{$ctx:hostName}</hostName>
+                        <accessToken>{$ctx:accessToken}</accessToken>
+                    </docusign.revokeOAuthToken>
+                </case>
+                <case regex="urn:getLoginInformation">
+                    <docusign.getLoginInformation>
+                        <includeApiPassword>{$ctx:includeApiPassword}</includeApiPassword>
+                        <includeAccountIDGuid>{$ctx:includeAccountIDGuid}</includeAccountIDGuid>
+                        <loginSetting>{$ctx:loginSetting}</loginSetting>
+                    </docusign.getLoginInformation>
+                </case>
+                <case regex="urn:ping">
+                    <docusign.ping/>
+                </case>
+                <case regex="urn:createEnvelopeFromDocument">
+                    <docusign.createEnvelopeFromDocument>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <documents>{$ctx:documents}</documents>
+                        <recipients>{$ctx:recipients}</recipients>
+                        <emailSubject>{$ctx:emailSubject}</emailSubject>
+                        <status>{$ctx:status}</status>
+                    </docusign.createEnvelopeFromDocument>
+                </case>
+                <case regex="urn:createEnvelopeFromTemplate">
+                    <docusign.createEnvelopeFromTemplate>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <templateId>{$ctx:templateId}</templateId>
+                        <templateRoles>{$ctx:templateRoles}</templateRoles>
+                        <emailSubject>{$ctx:emailSubject}</emailSubject>
+                        <status>{$ctx:status}</status>
+                    </docusign.createEnvelopeFromTemplate>
+                </case>
+                <case regex="urn:createEnvelope">
+                    <docusign.createEnvelope>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <documents>{$ctx:documents}</documents>
+                        <recipients>{$ctx:recipients}</recipients>
+                        <templateId>{$ctx:templateId}</templateId>
+                        <templateRoles>{$ctx:templateRoles}</templateRoles>
+                        <emailSubject>{$ctx:emailSubject}</emailSubject>
+                        <status>{$ctx:status}</status>
+                    </docusign.createEnvelope>
+                </case>
+                <case regex="urn:getDocumentFromAnEnvelope">
+                    <docusign.getDocumentFromAnEnvelope>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                        <documentId>{$ctx:documentId}</documentId>
+                    </docusign.getDocumentFromAnEnvelope>
+                </case>
+                <case regex="urn:listEnvelopeDocuments">
+                    <docusign.listEnvelopeDocuments>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                    </docusign.listEnvelopeDocuments>
+                </case>
+                <case regex="urn:getEnvelope">
+                    <docusign.getEnvelope>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                    </docusign.getEnvelope>
+                </case>
+                <case regex="urn:listTemplates">
+                    <docusign.listTemplates>
+                        <accountId>{$ctx:accountId}</accountId>
+                    </docusign.listTemplates>
+                </case>
+                <case regex="urn:getTemplate">
+                    <docusign.getTemplate>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <templateId>{$ctx:templateId}</templateId>
+                    </docusign.getTemplate>
+                </case>
+                <case regex="urn:listRecipientsInEnvelope">
+                    <docusign.listRecipientsInEnvelope>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                    </docusign.listRecipientsInEnvelope>
+                </case>
+                <case regex="urn:createRecipient">
+                    <docusign.createRecipient>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                        <userName>{$ctx:userName}</userName>
+                        <authenticationMethod>{$ctx:authenticationMethod}</authenticationMethod>
+                        <clientUserId>{$ctx:clientUserId}</clientUserId>
+                        <email>{$ctx:email}</email>
+                        <returnUrl>{$ctx:returnUrl}</returnUrl>
+                        <pingFrequency>{$ctx:pingFrequency}</pingFrequency>
+                        <authenticationInstant>{$ctx:authenticationInstant}</authenticationInstant>
+                        <recipientId>{$ctx:recipientId}</recipientId>
+                        <assertionId>{$ctx:assertionId}</assertionId>
+                        <securityDomain>{$ctx:securityDomain}</securityDomain>
+                        <userId>{$ctx:userId}</userId>
+                        <pingUrl>{$ctx:pingUrl}</pingUrl>
+                    </docusign.createRecipient>
+                </case>
+                <case regex="urn:updateRecipients">
+                    <docusign.updateRecipients>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                        <carbonCopies>{$ctx:carbonCopies}</carbonCopies>
+                        <signers>{$ctx:signers}</signers>
+                        <agents>{$ctx:agents}</agents>
+                        <certifiedDeliveries>{$ctx:certifiedDeliveries}</certifiedDeliveries>
+                        <currentRoutingOrder>{$ctx:currentRoutingOrder}</currentRoutingOrder>
+                        <editors>{$ctx:editors}</editors>
+                        <errorDetails>{$ctx:errorDetails}</errorDetails>
+                        <inPersonSigners>{$ctx:inPersonSigners}</inPersonSigners>
+                        <intermediaries>{$ctx:intermediaries}</intermediaries>
+                        <recipientCount>{$ctx:recipientCount}</recipientCount>
+                    </docusign.updateRecipients>
+                </case>
+                <case regex="urn:sendDraftEnvelope">
+                    <docusign.sendDraftEnvelope>
+                        <accountId>{$ctx:accountId}</accountId>
+                        <envelopeId>{$ctx:envelopeId}</envelopeId>
+                        <status>{$ctx:status}</status>
+                    </docusign.sendDraftEnvelope>
+                </case>
+            </switch>
+            <respond/>
+        </inSequence>
+        <outSequence>
+            <log/>
+            <send/>
+        </outSequence>
+    </target>
+    <description/>
+</proxy>
+                                
