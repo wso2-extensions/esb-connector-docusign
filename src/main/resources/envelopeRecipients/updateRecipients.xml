@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<template name="updateRecipients" xmlns="http://ws.apache.org/ns/synapse">
+    <parameter name="accountId"
+               description="The accountId of the account that the user is using, returned in the Login response."/>
+    <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
+    <parameter name="carbonCopies" description="Recipients who should receive a copy of the envelope."/>
+    <parameter name="signers" description="This containing information about the Signer recipient."/>
+    <parameter name="agents"
+               description="This defining the management and access rights of a recipient assigned
+                as an agent on the document."/>
+    <parameter name="certifiedDeliveries"
+               description="Containing information on a recipient the must receive the completed documents
+               for the envelope to be completed, but the recipient does not need to sign, initial, date,
+               or add information to any of the documents."/>
+    <parameter name="currentRoutingOrder" description="Routing order."/>
+    <parameter name="editors"
+               description="This defining the management and access rights of a recipient
+               assigned as an editor on the document."/>
+    <parameter name="errorDetails" description="An error details associated with the error."/>
+    <parameter name="inPersonSigners"
+               description="Specifies a signer that is in the same physical location as a DocuSign user
+               who will act as a Signing Host for the transaction."/>
+    <parameter name="intermediaries"
+               description="Identifies a recipient that can, but is not required to, add name and email information for
+                recipients at the same or subsequent level in the routing order."/>
+    <parameter name="recipientCount" description="The number of recipients."/>
+    <sequence>
+        <property name="uri.var.accountId" expression="$func:accountId"/>
+        <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
+        <property name="uri.var.carbonCopies" expression="$func:carbonCopies"/>
+        <property name="uri.var.signers" expression="$func:signers"/>
+        <property name="uri.var.agents" expression="$func:agents"/>
+        <property name="uri.var.certifiedDeliveries" expression="$func:certifiedDeliveries"/>
+        <property name="uri.var.currentRoutingOrder" expression="$func:currentRoutingOrder"/>
+        <property name="uri.var.editors" expression="$func:editors"/>
+        <property name="uri.var.errorDetails" expression="$func:errorDetails"/>
+        <property name="uri.var.inPersonSigners" expression="$func:inPersonSigners"/>
+        <property name="uri.var.intermediaries" expression="$func:intermediaries"/>
+        <property name="uri.var.recipientCount" expression="$func:recipientCount"/>
+        <script language="js"><![CDATA[
+            //request body param variables
+            var carbonCopies=mc.getProperty('uri.var.carbonCopies');
+            var signers=mc.getProperty('uri.var.signers');
+            var agents=mc.getProperty('uri.var.agents');
+            var certifiedDeliveries=mc.getProperty('uri.var.certifiedDeliveries');
+            var currentRoutingOrder=mc.getProperty('uri.var.currentRoutingOrder');
+            var editors=mc.getProperty('uri.var.editors');
+            var errorDetails=mc.getProperty('uri.var.errorDetails');
+            var inPersonSigners=mc.getProperty('uri.var.inPersonSigners');
+            var intermediaries=mc.getProperty('uri.var.intermediaries');
+            var recipientCount=mc.getProperty('uri.var.recipientCount');
+            var payload = mc.getPayloadJSON();
+            if(signers != null && signers!="" && signers!="[]") {
+                payload.signers = eval( "(" + signers + ")" );
+            }
+            if(carbonCopies != null && carbonCopies!="" && carbonCopies!="[]") {
+                payload.carbonCopies = eval( "(" + carbonCopies + ")" );
+            }
+            if(agents != null && agents!="" && agents!="[]") {
+                payload.agents = eval( "(" + agents + ")" );
+            }
+            if(certifiedDeliveries != null && certifiedDeliveries!="" && certifiedDeliveries!="[]") {
+                payload.certifiedDeliveries = eval( "(" + certifiedDeliveries + ")" );
+            }
+            if (currentRoutingOrder != null && currentRoutingOrder != "") {
+                payload.currentRoutingOrder = currentRoutingOrder;
+            }
+            if(editors != null && editors!="" && editors!="[]") {
+                payload.editors = eval( "(" + editors + ")" );
+            }
+            if(errorDetails != null && errorDetails!="") {
+                payload.errorDetails = eval( "(" + errorDetails + ")" );
+            }
+            if(inPersonSigners != null && inPersonSigners!="" && inPersonSigners!="[]") {
+                payload.inPersonSigners = eval( "(" + inPersonSigners + ")" );
+            }
+            if(intermediaries != null && intermediaries!="" && intermediaries!="[]") {
+                payload.intermediaries = eval( "(" + intermediaries + ")" );
+            }
+            if (recipientCount != null && recipientCount != "") {
+                payload.recipientCount = recipientCount;
+            }
+            //Set the newly constructed payload
+            mc.setPayloadJSON(payload);
+        ]]>
+        </script>
+        <filter source="$ctx:docusignBlocking" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <http method="put"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <http method="put"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
+        <!-- Remove custom Headers from the API Response -->
+        <header name="X-RateLimit-Limit" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Remaining" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Reset" action="remove" scope="transport"/>
+        <header name="X-Content-Type-Options" action="remove" scope="transport"/>
+        <header name="Cache-Control" action="remove" scope="transport"/>
+    </sequence>
+</template>

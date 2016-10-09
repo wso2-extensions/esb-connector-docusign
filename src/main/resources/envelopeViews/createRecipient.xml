@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<template name="createRecipient" xmlns="http://ws.apache.org/ns/synapse">
+    <!-- Required parameters -->
+    <parameter name="accountId"
+               description="The accountId of the account that the user is using, returned in the Login response."/>
+    <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
+    <parameter name="userName"
+               description="Specifies the username of the recipient. You can use either email and userName or
+               userId to identify the recipient."/>
+    <parameter name="authenticationMethod" description="This is used to authenticate the recipient/signer."/>
+    <parameter name="clientUserId"
+               description="A sender created value. If provided, the recipient is treated as an embedded (captive)
+               recipient or signer."/>
+    <parameter name="email" description="Specifies the email of the recipient."/>
+    <parameter name="returnUrl"
+               description="The url the recipient is redirected to after the signing session has ended."/>
+    <!-- Optional parameters -->
+    <parameter name="pingFrequency"
+               description="This is the interval, in seconds, between pings on the pingUr, Only used if pingUrl is specified."/>
+    <parameter name="authenticationInstant"
+               description="A sender generated value that indicates the date/time that the signer was authenticated."/>
+    <parameter name="recipientId" description="This is unique ID for the recipient."/>
+    <parameter name="assertionId"
+               description="A unique identifier of the authentication event executed by the client application."/>
+    <parameter name="securityDomain" description="The domain in which the user authenticated."/>
+    <parameter name="userId"
+               description="Specifies the user ID of the recipient. You can use with user ID or
+               email and user name to identify the recipient."/>
+    <parameter name="pingUrl"
+               description="A client Url to be pinged by the DocuSign Signing experience to indicate to the client
+               that Signing is active."/>
+    <sequence>
+        <property name="uri.var.accountId" expression="$func:accountId"/>
+        <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
+        <property name="uri.var.userName" expression="$func:userName"/>
+        <property name="uri.var.authenticationMethod" expression="$func:authenticationMethod"/>
+        <property name="uri.var.clientUserId" expression="$func:clientUserId"/>
+        <property name="uri.var.email" expression="$func:email"/>
+        <property name="uri.var.returnUrl" expression="$func:returnUrl"/>
+        <property name="uri.var.pingFrequency" expression="$func:pingFrequency"/>
+        <property name="uri.var.authenticationInstant" expression="$func:authenticationInstant"/>
+        <property name="uri.var.recipientId" expression="$func:recipientId"/>
+        <property name="uri.var.assertionId" expression="$func:assertionId"/>
+        <property name="uri.var.securityDomain" expression="$func:securityDomain"/>
+        <property name="uri.var.userId" expression="$func:userId"/>
+        <property name="uri.var.pingUrl" expression="$func:pingUrl"/>
+        <payloadFactory media-type="json">
+            <format>
+                {
+                "userName":"$1",
+                "authenticationMethod":"$2",
+                "clientUserId":"$3",
+                "email":"$4",
+                "returnUrl":"$5"
+                }
+            </format>
+            <args>
+                <arg expression="$ctx:uri.var.userName"/>
+                <arg expression="$ctx:uri.var.authenticationMethod"/>
+                <arg expression="$ctx:uri.var.clientUserId"/>
+                <arg expression="$ctx:uri.var.email"/>
+                <arg expression="$ctx:uri.var.returnUrl"/>
+            </args>
+        </payloadFactory>
+        <script language="js"><![CDATA[
+            //request body param variables
+            var pingFrequency=mc.getProperty('uri.var.pingFrequency');
+            var authenticationInstant=mc.getProperty('uri.var.authenticationInstant');
+            var recipientId=mc.getProperty('uri.var.recipientId');
+            var assertionId=mc.getProperty('uri.var.assertionId');
+            var securityDomain=mc.getProperty('uri.var.securityDomain');
+            var userId=mc.getProperty('uri.var.userId');
+            var pingUrl=mc.getProperty('uri.var.pingUrl');
+            //Get the existing payload
+            var payload = mc.getPayloadJSON();
+            if (pingFrequency != null && pingFrequency != "") {
+                payload["pingFrequency"]=pingFrequency;
+            }
+            if (authenticationInstant != null && authenticationInstant != "") {
+                payload["authenticationInstant"]=authenticationInstant;
+            }
+            if (recipientId != null && recipientId != "") {
+                payload["recipientId"]=recipientId;
+            }
+            if (assertionId != null && assertionId != "") {
+                payload["assertionId"]=assertionId;
+            }
+            if (securityDomain != null && securityDomain != "") {
+                payload["securityDomain"]=securityDomain;
+            }
+            if (userId != null && userId != "") {
+                payload["userId"]=userId;
+            }
+            if (pingUrl != null && pingUrl != "") {
+                payload["pingUrl"]=pingUrl;
+            }
+            //Set the newly constructed payload
+            mc.setPayloadJSON(payload);
+        ]]></script>
+
+        <filter source="$ctx:docusignBlocking" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <http method="post"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/views/recipient"/>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <http method="post"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/views/recipient"/>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
+        <!-- Remove custom Headers from the API Response -->
+        <header name="X-RateLimit-Limit" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Remaining" action="remove" scope="transport"/>
+        <header name="X-RateLimit-Reset" action="remove" scope="transport"/>
+        <header name="X-Content-Type-Options" action="remove" scope="transport"/>
+        <header name="Cache-Control" action="remove" scope="transport"/>
+    </sequence>
+</template>

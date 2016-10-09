@@ -1,0 +1,10 @@
+{
+  "accessToken": "%s(accessToken)",
+  "apiUrl": "%s(apiUrl)",
+  "apiVersion": "%s(apiVersion)",
+  "accountId": "%s(accountId)",
+  "emailSubject":"%s(emailSubject)",
+  "status":"%s(status)",
+  "recipients":%s(recipients),
+  "documents":%s(documents)
+}

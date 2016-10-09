@@ -1,0 +1,11 @@
+{
+  "apiUrl":"%s(apiUrl)",
+  "apiVersion":"%s(apiVersion)",
+  "accessToken":"%s(accessToken)",
+  "accountId":"%s(accountId)",
+  "envelopeId":"%s(envelopeId)",
+  "clientUserId":"%s(clientUserId)",
+  "email":"%s(email)",
+  "signerName":"%s(signerName)",
+  "recipientId":"%s(recipientId)"
+}
