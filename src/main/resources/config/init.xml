@@ -21,13 +21,36 @@
     <parameter name="apiVersion" description="The version of the docusign API."/>
     <parameter name="accessToken"
                description="OAuth Token to send and manipulate data of docusign API."/>
+    <parameter name="userName" description="The username of the docuSign account."/>
+    <parameter name="password" description="The password of the docuSign account."/>
+    <parameter name="integratorKey" description="The client application’s integrator key."/>
     <parameter name="blocking"
                description="The blocking parameter is helping connector performs the blocking invocations to docuSign."/>
     <sequence>
         <property name="uri.var.apiUrl" expression="$func:apiUrl"/>
         <property name="uri.var.apiVersion" expression="$func:apiVersion"/>
         <property name="uri.var.accessToken" expression="$func:accessToken"/>
+        <property name="uri.var.userName" expression="$func:userName"/>
+        <property name="uri.var.password" expression="$func:password"/>
+        <property name="uri.var.integratorKey" expression="$func:integratorKey"/>
         <property name="docusignBlocking" expression="$func:blocking"/>
-        <header name="Authorization" expression="fn:concat('Bearer ', $ctx:uri.var.accessToken)" scope="transport"/>
+        <filter xpath="boolean($ctx:uri.var.accessToken)">
+            <then>
+                <header name="Authorization" expression="fn:concat('Bearer ', $ctx:uri.var.accessToken)" scope="transport"/>
+            </then>
+            <else>
+                <script language="js"><![CDATA[
+                var integratorKey = mc.getProperty('uri.var.integratorKey');
+                var userName = mc.getProperty('uri.var.userName');
+                var password = mc.getProperty('uri.var.password');
+                var credentials = '{';
+                credentials = credentials.concat('"Username":"' + userName +'",' +'"Password":"'+ password +'",'+
+                    '"IntegratorKey":"' + integratorKey +'"}');
+                mc.setProperty('credentials', credentials);
+                ]]>
+                </script>
+                <header name="X-DocuSign-Authentication" expression="$ctx:credentials" scope="transport"/>
+            </else>
+        </filter>
     </sequence>
 </template>
