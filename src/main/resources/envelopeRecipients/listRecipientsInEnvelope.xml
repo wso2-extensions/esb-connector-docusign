@@ -21,15 +21,48 @@
     <parameter name="accountId"
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
+    <parameter name="includeTabs"
+               description="When true the tab information associated with the recipient is included in the response."/>
+    <parameter name="includeExtended"
+               description="When true the extended properties are included in the response."/>
+    <parameter name="includeAnchorTabLocations"
+               description="When true and include_tabs=true, all tabs with anchor tab properties are included in the response."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
+        <property name="uri.var.includeTabs" expression="$func:includeTabs"/>
+        <property name="uri.var.includeExtended" expression="$func:includeExtended"/>
+        <property name="uri.var.includeAnchorTabLocations"
+                  expression="$func:includeAnchorTabLocations"/>
+        <script language="js">
+            <![CDATA[
+            var includeTabs = mc.getProperty('uri.var.includeTabs');
+            var includeExtended = mc.getProperty('uri.var.includeExtended');
+            var includeAnchorTabLocations = mc.getProperty('uri.var.includeAnchorTabLocations');
+            var urlQuery = "";
+
+            if (includeTabs != null && includeTabs != "") {
+                urlQuery += 'include_tabs=' + includeTabs + '&';
+                    if (includeAnchorTabLocations != null && includeAnchorTabLocations != "") {
+                        urlQuery += 'exclude_fields=' + includeAnchorTabLocations + '&';
+                       }
+            }
+            if (includeExtended != null && includeExtended != "") {
+                urlQuery += 'include_extended=' + includeExtended + '&';
+            }
+
+            if (urlQuery != null && urlQuery != "") {
+                urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
+                mc.setProperty('uri.var.urlQuery', urlQuery);
+            }
+        ]]>
+        </script>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
@@ -37,7 +70,7 @@
                 <call>
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>
