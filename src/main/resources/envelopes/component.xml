@@ -38,5 +38,9 @@
             <file>sendDraftEnvelope.xml</file>
             <description>Send draft envelope.</description>
         </component>
+        <component name="createEnvelopeWithMultiformData">
+            <file>createEnvelopeWithMultiformData.xml</file>
+            <description>Create an envelope with multipart/form-data</description>
+        </component>
     </subComponents>
 </component>
