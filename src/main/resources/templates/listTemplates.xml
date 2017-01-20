@@ -20,8 +20,120 @@
     <!-- Required parameters -->
     <parameter name="accountId"
                description="The accountId of the account that the user is using, returned in the Login response."/>
+    <!-- Optional parameters -->
+    <parameter name="count" description="Number of records to return in the cache."/>
+    <parameter name="folder" description="The query value can be a folder name or folder ID."/>
+    <parameter name="folderIds" description="A comma separated list of folder ID GUIDs."/>
+    <parameter name="fromDate"
+               description="Start of the search date range. Only returns templates created on or after this date and time."/>
+    <parameter name="include"
+               description="A comma-separated list of additional template attributes to include in the response."/>
+    <parameter name="order"
+               description="Sets the direction order used to sort the list. Valid values(asc,desc)."/>
+    <parameter name="orderBy" description="Sets the file attribute used to sort the list."/>
+    <parameter name="searchText"
+               description="The search text used to search the names of templates."/>
+    <parameter name="shared"
+               description="The accountId of the account that the user is using, returned in the Login response."/>
+    <parameter name="sharedByMe"
+               description="If true, the response only includes templates shared by the user.
+                If false, the response only returns template not shared by the user.
+                If not specified, the response is not affected."/>
+    <parameter name="startPosition"
+               description="The starting index for the first template shown in the response.
+               This must be greater than or equal to zero."/>
+    <parameter name="toDate" description="End of the search date range."/>
+    <parameter name="usedFromDate" description="Start of the search date range."/>
+    <parameter name="usedToDate" description="End of the search date range."/>
+    <parameter name="userFilter"
+               description="Sets if the templates shown in the response Valid values(owned_by_me,shared_with_me)."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
+        <property name="uri.var.count" expression="$func:count"/>
+        <property name="uri.var.folder" expression="$func:folder"/>
+        <property name="uri.var.folderIds" expression="$func:folderIds"/>
+        <property name="uri.var.fromDate" expression="$func:fromDate"/>
+        <property name="uri.var.include" expression="$func:include"/>
+        <property name="uri.var.order" expression="$func:order"/>
+        <property name="uri.var.orderBy" expression="$func:orderBy"/>
+        <property name="uri.var.searchText" expression="$func:searchText"/>
+        <property name="uri.var.shared" expression="$func:shared"/>
+        <property name="uri.var.sharedByMe" expression="$func:sharedByMe"/>
+        <property name="uri.var.startPosition" expression="$func:startPosition"/>
+        <property name="uri.var.toDate" expression="$func:toDate"/>
+        <property name="uri.var.usedFromDate" expression="$func:usedFromDate"/>
+        <property name="uri.var.usedToDate" expression="$func:usedToDate"/>
+        <property name="uri.var.userFilter" expression="$func:userFilter"/>
+        <script language="js">
+            <![CDATA[
+                //request body param variables
+                var count = mc.getProperty('count');
+                var folder = mc.getProperty('folder');
+                var folderIds = mc.getProperty('folderIds');
+                var fromDate = mc.getProperty('fromDate');
+                var include = mc.getProperty('include');
+                var order = mc.getProperty('order');
+                var orderBy = mc.getProperty('orderBy');
+                var searchText = mc.getProperty('searchText');
+                var shared = mc.getProperty('shared');
+                var sharedByMe = mc.getProperty('sharedByMe');
+                var startPosition = mc.getProperty('startPosition');
+                var toDate = mc.getProperty('toDate');
+                var usedFromDate = mc.getProperty('usedFromDate');
+                var usedToDate = mc.getProperty('usedToDate');
+                var userFilter = mc.getProperty('userFilter');
+                var urlQuery = '';
+                if (count != null && count != ""){
+                   urlQuery += 'count=' + count + '&';
+                }
+                if (folder != null && folder != ""){
+                   urlQuery += 'folder=' + folder + '&';
+                }
+                if (folderIds != null && folderIds != ""){
+                   urlQuery += 'folderIds=' + folderIds + '&';
+                }
+                if (fromDate != null && fromDate != ""){
+                   urlQuery += 'fromDate=' + fromDate + '&';
+                }
+                if (include != null && include != ""){
+                    urlQuery += 'include=' + include + '&';
+                }
+                if (order != null && order != ""){
+                    urlQuery += 'order=' + order + '&';
+                }
+                if (orderBy != null && orderBy != ""){
+                    urlQuery += 'orderBy=' + orderBy + '&';
+                }
+                if (searchText != null && searchText != ""){
+                    urlQuery += 'searchText=' + searchText + '&';
+                }
+                if (shared != null && shared != ""){
+                    urlQuery += 'shared=' + shared + '&';
+                }
+                if (sharedByMe != null && sharedByMe != ""){
+                    urlQuery += 'sharedByMe=' + sharedByMe + '&';
+                }
+                if (startPosition != null && startPosition != ""){
+                    urlQuery += 'startPosition=' + startPosition + '&';
+                }
+                if (toDate != null && toDate != ""){
+                    urlQuery += 'toDate=' + toDate + '&';
+                }
+                if (usedFromDate != null && usedFromDate != ""){
+                    urlQuery += 'usedFromDate=' + usedFromDate + '&';
+                }
+                if (usedToDate != null && usedToDate != ""){
+                    urlQuery += 'usedToDate=' + usedToDate + '&';
+                }
+                if (userFilter != null && userFilter != ""){
+                    urlQuery += 'userFilter=' + userFilter + '&';
+                }
+                if (urlQuery != null && urlQuery != ""){
+                    urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
+                }
+                mc.setProperty('uri.var.urlQuery',urlQuery);
+            ]]>
+        </script>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">
@@ -35,7 +147,7 @@
                 <call>
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>
