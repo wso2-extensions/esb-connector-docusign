@@ -26,5 +26,9 @@
             <file>getDocumentFromAnEnvelope.xml</file>
             <description>Retrieves the specified document from the envelope.</description>
         </component>
+        <component name="envelopeDocumentsUpdateList">
+            <file>envelopeDocumentsUpdateList.xml</file>
+            <description>Adds one or more documents to an existing envelope document.</description>
+        </component>
     </subComponents>
 </component>
