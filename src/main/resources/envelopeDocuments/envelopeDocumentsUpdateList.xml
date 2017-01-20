@@ -20,16 +20,44 @@
     <parameter name="accountId"
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
+    <parameter name="applyDocumentFields"
+               description="When true, document fields can be added or modified while adding or modifying envelope documents."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
-        <call>
-            <endpoint>
-                <http method="put"
-                      uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents"/>
-            </endpoint>
-        </call>
-
+        <property name="applyDocumentFields" expression="$func:applyDocumentFields"/>
+        <script language="js">
+            <![CDATA[
+                //request body param variables
+                var applyDocumentFields = mc.getProperty('applyDocumentFields');
+                var urlQuery = '';
+                if (applyDocumentFields != null && applyDocumentFields != ""){
+                    urlQuery += 'apply_document_fields=' + applyDocumentFields + '&';
+                }
+                if (urlQuery != null && urlQuery != ""){
+                    urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
+                }
+                mc.setProperty('uri.var.urlQuery',urlQuery);
+            ]]>
+        </script>
+        <filter source="$ctx:docusignBlocking" regex="true">
+            <then>
+                <call blocking="true">
+                    <endpoint>
+                        <http method="put"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents{+uri.var.urlQuery}"/>
+                    </endpoint>
+                </call>
+            </then>
+            <else>
+                <call>
+                    <endpoint>
+                        <http method="put"
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents{+uri.var.urlQuery}"/>
+                    </endpoint>
+                </call>
+            </else>
+        </filter>
         <!-- Remove custom Headers from the API Response -->
         <header name="Strict-Transport-Security" action="remove" scope="transport"/>
         <header name="X-Content-Type-Options" action="remove" scope="transport"/>

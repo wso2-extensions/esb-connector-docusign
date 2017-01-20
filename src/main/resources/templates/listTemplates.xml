@@ -49,21 +49,21 @@
                description="Sets if the templates shown in the response Valid values(owned_by_me,shared_with_me)."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
-        <property name="uri.var.count" expression="$func:count"/>
-        <property name="uri.var.folder" expression="$func:folder"/>
-        <property name="uri.var.folderIds" expression="$func:folderIds"/>
-        <property name="uri.var.fromDate" expression="$func:fromDate"/>
-        <property name="uri.var.include" expression="$func:include"/>
-        <property name="uri.var.order" expression="$func:order"/>
-        <property name="uri.var.orderBy" expression="$func:orderBy"/>
-        <property name="uri.var.searchText" expression="$func:searchText"/>
-        <property name="uri.var.shared" expression="$func:shared"/>
-        <property name="uri.var.sharedByMe" expression="$func:sharedByMe"/>
-        <property name="uri.var.startPosition" expression="$func:startPosition"/>
-        <property name="uri.var.toDate" expression="$func:toDate"/>
-        <property name="uri.var.usedFromDate" expression="$func:usedFromDate"/>
-        <property name="uri.var.usedToDate" expression="$func:usedToDate"/>
-        <property name="uri.var.userFilter" expression="$func:userFilter"/>
+        <property name="count" expression="$func:count"/>
+        <property name="folder" expression="$func:folder"/>
+        <property name="folderIds" expression="$func:folderIds"/>
+        <property name="fromDate" expression="$func:fromDate"/>
+        <property name="include" expression="$func:include"/>
+        <property name="order" expression="$func:order"/>
+        <property name="orderBy" expression="$func:orderBy"/>
+        <property name="searchText" expression="$func:searchText"/>
+        <property name="shared" expression="$func:shared"/>
+        <property name="sharedByMe" expression="$func:sharedByMe"/>
+        <property name="startPosition" expression="$func:startPosition"/>
+        <property name="toDate" expression="$func:toDate"/>
+        <property name="usedFromDate" expression="$func:usedFromDate"/>
+        <property name="usedToDate" expression="$func:usedToDate"/>
+        <property name="userFilter" expression="$func:userFilter"/>
         <script language="js">
             <![CDATA[
                 //request body param variables
@@ -90,10 +90,10 @@
                    urlQuery += 'folder=' + folder + '&';
                 }
                 if (folderIds != null && folderIds != ""){
-                   urlQuery += 'folderIds=' + folderIds + '&';
+                   urlQuery += 'folder_ids=' + folderIds + '&';
                 }
                 if (fromDate != null && fromDate != ""){
-                   urlQuery += 'fromDate=' + fromDate + '&';
+                   urlQuery += 'from_date=' + fromDate + '&';
                 }
                 if (include != null && include != ""){
                     urlQuery += 'include=' + include + '&';
@@ -102,31 +102,31 @@
                     urlQuery += 'order=' + order + '&';
                 }
                 if (orderBy != null && orderBy != ""){
-                    urlQuery += 'orderBy=' + orderBy + '&';
+                    urlQuery += 'order_by=' + orderBy + '&';
                 }
                 if (searchText != null && searchText != ""){
-                    urlQuery += 'searchText=' + searchText + '&';
+                    urlQuery += 'search_text=' + searchText + '&';
                 }
                 if (shared != null && shared != ""){
                     urlQuery += 'shared=' + shared + '&';
                 }
                 if (sharedByMe != null && sharedByMe != ""){
-                    urlQuery += 'sharedByMe=' + sharedByMe + '&';
+                    urlQuery += 'shared_by_me=' + sharedByMe + '&';
                 }
                 if (startPosition != null && startPosition != ""){
-                    urlQuery += 'startPosition=' + startPosition + '&';
+                    urlQuery += 'start_position=' + startPosition + '&';
                 }
                 if (toDate != null && toDate != ""){
-                    urlQuery += 'toDate=' + toDate + '&';
+                    urlQuery += 'to_date=' + toDate + '&';
                 }
                 if (usedFromDate != null && usedFromDate != ""){
-                    urlQuery += 'usedFromDate=' + usedFromDate + '&';
+                    urlQuery += 'used_from_date=' + usedFromDate + '&';
                 }
                 if (usedToDate != null && usedToDate != ""){
-                    urlQuery += 'usedToDate=' + usedToDate + '&';
+                    urlQuery += 'used_to_date=' + usedToDate + '&';
                 }
                 if (userFilter != null && userFilter != ""){
-                    urlQuery += 'userFilter=' + userFilter + '&';
+                    urlQuery += 'user_filter=' + userFilter + '&';
                 }
                 if (urlQuery != null && urlQuery != ""){
                     urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
@@ -139,7 +139,7 @@
                 <call blocking="true">
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
