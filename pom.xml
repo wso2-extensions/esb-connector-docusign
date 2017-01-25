@@ -21,7 +21,7 @@
     <groupId>org.wso2.carbon.connector</groupId>
     <artifactId>org.wso2.carbon.connector.docusign</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.6-SNAPSHOT</version>
+    <version>1.0.6</version>
     <name>WSO2 Carbon - Mediation Library Connector For DocuSign</name>
     <url>http://wso2.org</url>
     <properties>
