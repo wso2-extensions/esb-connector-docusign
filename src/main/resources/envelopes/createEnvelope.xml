@@ -26,6 +26,80 @@
     <parameter name="templateId" description="The ID of the template being accessed."/>
     <parameter name="templateRoles"
                description="Specifies the template recipient. Each roleName in the template must have a recipient assigned to it"/>
+    <parameter name="brandId"
+               description="This sets the brand profile format used for the envelope.
+               The value in the string is the brandId associated with the profileAccount branding must be enabled for
+               the account to use this option."/>
+    <parameter name="emailBlurb"
+               description="This is the same as the email body. If specified it is included in email body for all envelope recipients."/>
+    <parameter name="compositeTemplates"
+               description="This is an json element.A complex type that can be added to create envelopes from a
+               combination of DocuSign templates and PDF forms."/>
+    <parameter name="brandLock" description=""/>
+    <parameter name="certificateUri"
+               description="Retrieves a URI for an endpoint that allow you to easily retrieve certification information."/>
+    <parameter name="completedDateTime" description="Specified the date and time this item was completed."/>
+    <parameter name="createdDateTime" description="Indicates the date and time the item was created."/>
+    <parameter name="customFields" description="This is json element."/>
+    <parameter name="customFieldsUri" description="Contains a URI for an endpoint that you can use to retrieve the custom fields."/>
+    <parameter name="declinedDateTime" description="The date and time the recipient declined the document."/>
+    <parameter name="deletedDateTime" description="Specified the date and time the item was deleted."/>
+    <parameter name="deliveredDateTime" description="This parameter reserved for DocuSign use only."/>
+    <parameter name="accessibility"
+               description="Sets the document reading zones for screen reader application.This element can only be used
+               if document accessibility is enabled for the account."/>
+    <parameter name="documentsCombinedUri" description=""/>
+    <parameter name="documentsUri" description="Contains a URI for an endpoint that you can use to retrieve the document."/>
+    <parameter name="emailSettings" description="This is json element for envelope email setting."/>
+    <parameter name="allowReassign"
+               description="Booean value. When set to true, the recipient can redirect an envelope to a more appropriate recipient."/>
+    <parameter name="enableWetSign"
+               description="Boolean value. When set to true, the signer is allowed to print the document and sign it on paper."/>
+    <parameter name="enforceSignerVisibility"
+               description="Boolean value. Document with tabs can only be viewed by signers that have a tab on that document."/>
+    <parameter name="allowMarkup"
+               description="Boolean value. When set to true, Markup is enabled for envelope.
+               Account must have Document Markup enabled to use this."/>
+    <parameter name="envelopeIdStamping" description="Boolean value. When set to true, Envelope ID stamping is enabled."/>
+    <parameter name="envelopeUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the envelope or envelopes."/>
+    <parameter name="eventNotification" description="This is json element."/>
+    <parameter name="is21CFRPart11"
+               description="Boolean value. When set to true, indicates that this module is enabled on the account."/>
+    <parameter name="isUniversalSignatureEnvelope" description=""/>
+    <parameter name="lastModifiedDateTime" description="The date and time the item was last modified."/>
+    <parameter name="envelopeLocks" description="This is json element."/>
+    <parameter name="attachments" description="The is json element."/>
+    <parameter name="messageLock"
+               description="Boolean value. prevents senders from changing the contents of emailBlurb and
+               emailSubject properties for the envelope."/>
+    <parameter name="notification" description="This is the json element."/>
+    <parameter name="notificationUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the notification."/>
+    <parameter name="purgeState" description="Initiates a purge request."/>
+    <parameter name="allowRecipientRecursion" description="The documents to be signed."/>
+    <parameter name="recipientsLock"
+               description="Boolean value. When set to true prevents senders from changing, correcting,
+               or deleting the recipient information for the envelope."/>
+    <parameter name="recipientsUri" description="Contains a URI for an endpoint that you can use to retrieve the recipients."/>
+    <parameter name="sentDateTime" description="The date and time the envelope was sent."/>
+    <parameter name="signingLocation" description="Specifies the physical location where the signing takes place."/>
+    <parameter name="asynchronous"
+               description="Boolean value. When set to true, the envelope is queued for processing and
+               the value of the status property is set to processing."/>
+    <parameter name="statusChangedDateTime" description="The date and time the status changed."/>
+    <parameter name="authoritativeCopy"
+               description="Boolean value, Specifies the Authoritative copy feature.
+               If set to true the Authoritative copy feature is enable."/>
+    <parameter name="templatesUri" description="Contains a URI for an endpoint that you can use to retrieve the templates."/>
+    <parameter name="transactionId" description="Used to identify an envelope."/>
+    <parameter name="useDisclosure" description="The documents to be signed."/>
+    <parameter name="voidedDateTime" description="The date and time the envelope or template was voided."/>
+    <parameter name="voidedReason" description="The reason the envelope or template was voided."/>
+    <parameter name="cdseMode	" description="Reserved for DocuSign."/>
+    <parameter name="completedDocumentsOnly" description="Reserved for DocuSign."/>
+    <parameter name="mergeRolesOnDraft"
+               description="Boolean value. When set to true, template roles will be merged, and empty recipients will be removed."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.documents" expression="$func:documents"/>
@@ -34,6 +108,54 @@
         <property name="uri.var.templateId" expression="$func:templateId"/>
         <property name="uri.var.templateRoles" expression="$func:templateRoles"/>
         <property name="uri.var.status" expression="$func:status"/>
+        <property name="uri.var.brandId" expression="$func:brandId"/>
+        <property name="uri.var.emailBlurb" expression="$func:emailBlurb"/>
+        <property name="uri.var.compositeTemplates" expression="$func:compositeTemplates"/>
+        <property name="uri.var.brandLock" expression="$func:brandLock"/>
+        <property name="uri.var.certificateUri" expression="$func:certificateUri"/>
+        <property name="uri.var.completedDateTime" expression="$func:completedDateTime"/>
+        <property name="uri.var.createdDateTime" expression="$func:createdDateTime"/>
+        <property name="uri.var.customFields" expression="$func:customFields"/>
+        <property name="uri.var.customFieldsUri" expression="$func:customFieldsUri"/>
+        <property name="uri.var.declinedDateTime" expression="$func:declinedDateTime"/>
+        <property name="uri.var.deletedDateTime" expression="$func:deletedDateTime"/>
+        <property name="uri.var.deliveredDateTime" expression="$func:deliveredDateTime"/>
+        <property name="uri.var.accessibility" expression="$func:accessibility"/>
+        <property name="uri.var.documentsCombinedUri" expression="$func:documentsCombinedUri"/>
+        <property name="uri.var.documentsUri" expression="$func:documentsUri"/>
+        <property name="uri.var.emailSettings" expression="$func:emailSettings"/>
+        <property name="uri.var.allowReassign" expression="$func:allowReassign"/>
+        <property name="uri.var.enableWetSign" expression="$func:enableWetSign"/>
+        <property name="uri.var.enforceSignerVisibility" expression="$func:enforceSignerVisibility"/>
+        <property name="uri.var.allowMarkup" expression="$func:allowMarkup"/>
+        <property name="uri.var.envelopeIdStamping" expression="$func:envelopeIdStamping"/>
+        <property name="uri.var.envelopeUri" expression="$func:envelopeUri"/>
+        <property name="uri.var.eventNotification" expression="$func:eventNotification"/>
+        <property name="uri.var.is21CFRPart11" expression="$func:is21CFRPart11"/>
+        <property name="uri.var.isUniversalSignatureEnvelope" expression="$func:isUniversalSignatureEnvelope"/>
+        <property name="uri.var.lastModifiedDateTime" expression="$func:lastModifiedDateTime"/>
+        <property name="uri.var.envelopeLocks" expression="$func:envelopeLocks"/>
+        <property name="uri.var.attachments" expression="$func:attachments"/>
+        <property name="uri.var.messageLock" expression="$func:messageLock"/>
+        <property name="uri.var.notification" expression="$func:notification"/>
+        <property name="uri.var.notificationUri" expression="$func:notificationUri"/>
+        <property name="uri.var.purgeState" expression="$func:purgeState"/>
+        <property name="uri.var.allowRecipientRecursion" expression="$func:allowRecipientRecursion"/>
+        <property name="uri.var.recipientsLock" expression="$func:recipientsLock"/>
+        <property name="uri.var.recipientsUri" expression="$func:recipientsUri"/>
+        <property name="uri.var.sentDateTime" expression="$func:sentDateTime"/>
+        <property name="uri.var.signingLocation" expression="$func:signingLocation"/>
+        <property name="uri.var.asynchronous" expression="$func:asynchronous"/>
+        <property name="uri.var.statusChangedDateTime" expression="$func:statusChangedDateTime"/>
+        <property name="uri.var.authoritativeCopy" expression="$func:authoritativeCopy"/>
+        <property name="uri.var.templatesUri" expression="$func:templatesUri"/>
+        <property name="uri.var.transactionId" expression="$func:transactionId"/>
+        <property name="uri.var.useDisclosure" expression="$func:useDisclosure"/>
+        <property name="uri.var.voidedDateTime" expression="$func:voidedDateTime"/>
+        <property name="uri.var.voidedReason" expression="$func:voidedReason"/>
+        <property name="cdseMode" expression="$func:cdseMode"/>
+        <property name="completedDocumentsOnly" expression="$func:completedDocumentsOnly"/>
+        <property name="mergeRolesOnDraft" expression="$func:mergeRolesOnDraft"/>
         <script language="js"><![CDATA[
             var documents = mc.getProperty('uri.var.documents');
             var emailSubject = mc.getProperty('uri.var.emailSubject');
@@ -41,6 +163,56 @@
             var status = mc.getProperty('uri.var.status');
             var templateId=mc.getProperty('uri.var.templateId');
             var templateRoles=mc.getProperty('uri.var.templateRoles');
+            var brandId=mc.getProperty('uri.var.brandId');
+            var emailBlurb=mc.getProperty('uri.var.emailBlurb');
+            var compositeTemplates=mc.getProperty('uri.var.compositeTemplates');
+            var brandLock=mc.getProperty('uri.var.brandLock');
+            var certificateUri=mc.getProperty('uri.var.certificateUri');
+            var completedDateTime=mc.getProperty('uri.var.completedDateTime');
+            var createdDateTime=mc.getProperty('uri.var.createdDateTime');
+            var customFields=mc.getProperty('uri.var.customFields');
+            var customFieldsUri=mc.getProperty('uri.var.customFieldsUri');
+            var declinedDateTime=mc.getProperty('uri.var.declinedDateTime');
+            var deletedDateTime=mc.getProperty('uri.var.deletedDateTime');
+            var deliveredDateTime=mc.getProperty('uri.var.deliveredDateTime');
+            var accessibility=mc.getProperty('uri.var.accessibility');
+            var documentsCombinedUri=mc.getProperty('uri.var.documentsCombinedUri');
+            var documentsUri=mc.getProperty('uri.var.documentsUri');
+            var emailSettings=mc.getProperty('uri.var.emailSettings');
+            var allowReassign=mc.getProperty('uri.var.allowReassign');
+            var enableWetSign=mc.getProperty('uri.var.enableWetSign');
+            var enforceSignerVisibility=mc.getProperty('uri.var.enforceSignerVisibility');
+            var allowMarkup=mc.getProperty('uri.var.allowMarkup');
+            var envelopeIdStamping=mc.getProperty('uri.var.envelopeIdStamping');
+            var envelopeUri=mc.getProperty('uri.var.envelopeUri');
+            var eventNotification=mc.getProperty('uri.var.eventNotification');
+            var is21CFRPart11=mc.getProperty('uri.var.is21CFRPart11');
+            var isUniversalSignatureEnvelope=mc.getProperty('uri.var.isUniversalSignatureEnvelope');
+            var lastModifiedDateTime=mc.getProperty('uri.var.lastModifiedDateTime');
+            var envelopeLocks=mc.getProperty('uri.var.envelopeLocks');
+            var attachments=mc.getProperty('uri.var.attachments');
+            var messageLock=mc.getProperty('uri.var.messageLock');
+            var notification=mc.getProperty('uri.var.notification');
+            var notificationUri=mc.getProperty('uri.var.notificationUri');
+            var purgeState=mc.getProperty('uri.var.purgeState');
+            var allowRecipientRecursion=mc.getProperty('uri.var.allowRecipientRecursion');
+            var recipientsLock=mc.getProperty('uri.var.recipientsLock');
+            var recipientsUri=mc.getProperty('uri.var.recipientsUri');
+            var sentDateTime=mc.getProperty('uri.var.sentDateTime');
+            var signingLocation=mc.getProperty('uri.var.signingLocation');
+            var asynchronous=mc.getProperty('uri.var.asynchronous');
+            var statusChangedDateTime=mc.getProperty('uri.var.statusChangedDateTime');
+            var authoritativeCopy=mc.getProperty('uri.var.authoritativeCopy');
+            var templatesUri=mc.getProperty('uri.var.templatesUri');
+            var transactionId=mc.getProperty('uri.var.transactionId');
+            var useDisclosure=mc.getProperty('uri.var.useDisclosure');
+            var voidedDateTime=mc.getProperty('uri.var.voidedDateTime');
+            var voidedReason=mc.getProperty('uri.var.voidedReason');
+            //request URL param variables
+            var cdseMode=mc.getProperty('cdseMode');
+            var completedDocumentsOnly=mc.getProperty('completedDocumentsOnly');
+            var mergeRolesOnDraft=mc.getProperty('mergeRolesOnDraft');
+            var urlQuery = '';
             var payload = mc.getPayloadJSON();
             if (status != null && status != "") {
                 payload.status = status;
@@ -60,7 +232,155 @@
             if (templateRoles != null && templateRoles != "" && templateRoles!="[]") {
                 payload.templateRoles = eval( "(" + templateRoles + ")" );
             }
+            if (brandId != null && brandId != "") {
+                payload.brandId = brandId;
+            }
+            if (emailBlurb != null && emailBlurb != "") {
+                payload.emailBlurb = emailBlurb;
+            }
+            if (compositeTemplates != null && compositeTemplates != "" && compositeTemplates!="[]") {
+                payload.compositeTemplates = eval( "(" + compositeTemplates + ")" );
+            }
+            if (brandLock != null && brandLock != "") {
+                payload.brandLock = brandLock;
+            }
+            if (certificateUri != null && certificateUri != "") {
+                payload.certificateUri = certificateUri;
+            }
+            if (completedDateTime != null && completedDateTime != "") {
+                payload.completedDateTime = completedDateTime;
+            }
+            if (createdDateTime != null && createdDateTime != "") {
+                payload.createdDateTime = createdDateTime;
+            }
+            if (customFields != null && customFields != "" && customFields!="[]") {
+                payload.customFields = eval( "(" + customFields + ")" );
+            }
+            if (customFieldsUri != null && customFieldsUri != "") {
+                payload.customFieldsUri = customFieldsUri;
+            }
+            if (declinedDateTime != null && declinedDateTime != "") {
+                payload.declinedDateTime = declinedDateTime;
+            }
+            if (deletedDateTime != null && deletedDateTime != "") {
+                payload.deletedDateTime = deletedDateTime;
+            }
+            if (deliveredDateTime != null && deliveredDateTime != "") {
+                payload.deliveredDateTime = deliveredDateTime;
+            }
+            if (accessibility != null && accessibility != "") {
+                payload.accessibility = accessibility;
+            }
+            if (documentsCombinedUri != null && documentsCombinedUri != "") {
+                payload.documentsCombinedUri = documentsCombinedUri;
+            }
+            if (documentsUri != null && documentsUri != "") {
+                payload.documentsUri = documentsUri;
+            }
+            if (emailSettings != null && emailSettings != "" && emailSettings!="[]") {
+                payload.emailSettings = eval( "(" + emailSettings + ")" );
+            }
+            if (allowReassign != null && allowReassign != "") {
+                payload.allowReassign = allowReassign;
+            }
+            if (enableWetSign != null && enableWetSign != "") {
+                payload.enableWetSign = enableWetSign;
+            }
+            if (enforceSignerVisibility != null && enforceSignerVisibility != "") {
+                payload.enforceSignerVisibility = enforceSignerVisibility;
+            }
+            if (allowMarkup != null && allowMarkup != "") {
+                payload.allowMarkup = allowMarkup;
+            }
+            if (envelopeIdStamping != null && envelopeIdStamping != "") {
+                payload.envelopeIdStamping = envelopeIdStamping;
+            }
+            if (envelopeUri != null && envelopeUri != "") {
+                payload.envelopeUri = envelopeUri;
+            }
+            if (eventNotification != null && eventNotification != "" && eventNotification!="[]") {
+                payload.eventNotification = eval( "(" + eventNotification + ")" );
+            }
+            if (is21CFRPart11 != null && is21CFRPart11 != "") {
+                payload.is21CFRPart11 = is21CFRPart11;
+            }
+            if (isUniversalSignatureEnvelope != null && isUniversalSignatureEnvelope != "") {
+                payload.isUniversalSignatureEnvelope = isUniversalSignatureEnvelope;
+            }
+            if (lastModifiedDateTime != null && lastModifiedDateTime != "") {
+                payload.lastModifiedDateTime = lastModifiedDateTime;
+            }
+            if (envelopeLocks != null && envelopeLocks != "" && envelopeLocks!="[]") {
+                payload.envelopeLocks = eval( "(" + envelopeLocks + ")" );
+            }
+            if (attachments != null && attachments != "" && attachments!="[]") {
+                payload.attachments = eval( "(" + attachments + ")" );
+            }
+            if (messageLock != null && messageLock != "") {
+                payload.messageLock = messageLock;
+            }
+            if (notification != null && notification != "" && notification!="[]") {
+                payload.notification = eval( "(" + notification + ")" );
+            }
+            if (notificationUri != null && notificationUri != "") {
+                payload.notificationUri = notificationUri;
+            }
+            if (purgeState != null && purgeState != "") {
+                payload.purgeState = purgeState;
+            }
+            if (allowRecipientRecursion != null && allowRecipientRecursion != "") {
+                payload.allowRecipientRecursion = allowRecipientRecursion;
+            }
+            if (recipientsLock != null && recipientsLock != "") {
+                payload.recipientsLock = recipientsLock;
+            }
+            if (recipientsUri != null && recipientsUri != "") {
+                payload.recipientsUri = recipientsUri;
+            }
+            if (sentDateTime != null && sentDateTime != "") {
+                payload.sentDateTime = sentDateTime;
+            }
+            if (signingLocation != null && signingLocation != "") {
+                payload.signingLocation = signingLocation;
+            }
+            if (asynchronous != null && asynchronous != "") {
+                payload.asynchronous = asynchronous;
+            }
+            if (statusChangedDateTime != null && statusChangedDateTime != "") {
+                payload.statusChangedDateTime = statusChangedDateTime;
+            }
+            if (authoritativeCopy != null && authoritativeCopy != "") {
+                payload.authoritativeCopy = authoritativeCopy;
+            }
+            if (templatesUri != null && templatesUri != "") {
+                payload.templatesUri = templatesUri;
+            }
+            if (transactionId != null && transactionId != "") {
+                payload.transactionId = transactionId;
+            }
+            if (useDisclosure != null && useDisclosure != "") {
+                payload.useDisclosure = useDisclosure;
+            }
+            if (voidedDateTime != null && voidedDateTime != "") {
+                payload.voidedDateTime = voidedDateTime;
+            }
+            if (voidedReason != null && voidedReason != "") {
+                payload.voidedReason = voidedReason;
+            }
             mc.setPayloadJSON(payload);
+            if (cdseMode != null && cdseMode != ""){
+                urlQuery += 'cdse_mode=' + cdseMode + '&';
+            }
+            if (completedDocumentsOnly != null && completedDocumentsOnly != ""){
+                urlQuery += 'completed_documents_only=' + completedDocumentsOnly + '&';
+            }
+            if (mergeRolesOnDraft != null && mergeRolesOnDraft != ""){
+                urlQuery += 'merge_roles_on_draft=' + mergeRolesOnDraft + '&';
+            }
+            if (urlQuery != null && urlQuery != ""){
+                urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
+            }
+            mc.setProperty('uri.var.urlQuery',urlQuery);
             ]]>
         </script>
         <filter source="$ctx:docusignBlocking" regex="true">
@@ -68,7 +388,7 @@
                 <call blocking="true">
                     <endpoint>
                         <http method="post"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
@@ -76,7 +396,7 @@
                 <call>
                     <endpoint>
                         <http method="post"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>
