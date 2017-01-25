@@ -47,6 +47,7 @@
     <parameter name="usedToDate" description="End of the search date range."/>
     <parameter name="userFilter"
                description="Sets if the templates shown in the response Valid values(owned_by_me,shared_with_me)."/>
+    <parameter name="optionalParameters" description="All the optional parameters are in the json format."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="count" expression="$func:count"/>
@@ -64,6 +65,7 @@
         <property name="usedFromDate" expression="$func:usedFromDate"/>
         <property name="usedToDate" expression="$func:usedToDate"/>
         <property name="userFilter" expression="$func:userFilter"/>
+        <property name="optionalParameters" expression="$func:optionalParameters"/>
         <script language="js">
             <![CDATA[
                 //request body param variables
@@ -82,6 +84,7 @@
                 var usedFromDate = mc.getProperty('usedFromDate');
                 var usedToDate = mc.getProperty('usedToDate');
                 var userFilter = mc.getProperty('userFilter');
+                var optionalParameters = mc.getProperty('optionalParameters');
                 var urlQuery = '';
                 if (count != null && count != ""){
                    urlQuery += 'count=' + count + '&';
@@ -127,6 +130,14 @@
                 }
                 if (userFilter != null && userFilter != ""){
                     urlQuery += 'user_filter=' + userFilter + '&';
+                }
+                if (optionalParameters != null && optionalParameters != "") {
+                    var txt = '{"optionalParametersList":' + optionalParameters+'}';
+                    var obj = eval ("(" + txt + ")");
+                    for(var key in obj.optionalParametersList){
+                        var value=obj.optionalParametersList[key];
+                        urlQuery += key + '=' + value + '&';
+                    }
                 }
                 if (urlQuery != null && urlQuery != ""){
                     urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
