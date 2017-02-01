@@ -35,13 +35,15 @@
     <parameter name="compositeTemplates"
                description="This is an json element.A complex type that can be added to create envelopes from a
                combination of DocuSign templates and PDF forms."/>
+    <parameter name="envelopeId" description="The ID of the envelope."/>
     <parameter name="brandLock" description=""/>
     <parameter name="certificateUri"
                description="Retrieves a URI for an endpoint that allow you to easily retrieve certification information."/>
     <parameter name="completedDateTime" description="Specified the date and time this item was completed."/>
     <parameter name="createdDateTime" description="Indicates the date and time the item was created."/>
     <parameter name="customFields" description="This is json element."/>
-    <parameter name="customFieldsUri" description="Contains a URI for an endpoint that you can use to retrieve the custom fields."/>
+    <parameter name="customFieldsUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the custom fields."/>
     <parameter name="declinedDateTime" description="The date and time the recipient declined the document."/>
     <parameter name="deletedDateTime" description="Specified the date and time the item was deleted."/>
     <parameter name="deliveredDateTime" description="This parameter reserved for DocuSign use only."/>
@@ -49,7 +51,8 @@
                description="Sets the document reading zones for screen reader application.This element can only be used
                if document accessibility is enabled for the account."/>
     <parameter name="documentsCombinedUri" description=""/>
-    <parameter name="documentsUri" description="Contains a URI for an endpoint that you can use to retrieve the document."/>
+    <parameter name="documentsUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the document."/>
     <parameter name="emailSettings" description="This is json element for envelope email setting."/>
     <parameter name="allowReassign"
                description="Booean value. When set to true, the recipient can redirect an envelope to a more appropriate recipient."/>
@@ -60,7 +63,8 @@
     <parameter name="allowMarkup"
                description="Boolean value. When set to true, Markup is enabled for envelope.
                Account must have Document Markup enabled to use this."/>
-    <parameter name="envelopeIdStamping" description="Boolean value. When set to true, Envelope ID stamping is enabled."/>
+    <parameter name="envelopeIdStamping"
+               description="Boolean value. When set to true, Envelope ID stamping is enabled."/>
     <parameter name="envelopeUri"
                description="Contains a URI for an endpoint that you can use to retrieve the envelope or envelopes."/>
     <parameter name="eventNotification" description="This is json element."/>
@@ -81,7 +85,8 @@
     <parameter name="recipientsLock"
                description="Boolean value. When set to true prevents senders from changing, correcting,
                or deleting the recipient information for the envelope."/>
-    <parameter name="recipientsUri" description="Contains a URI for an endpoint that you can use to retrieve the recipients."/>
+    <parameter name="recipientsUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the recipients."/>
     <parameter name="sentDateTime" description="The date and time the envelope was sent."/>
     <parameter name="signingLocation" description="Specifies the physical location where the signing takes place."/>
     <parameter name="asynchronous"
@@ -91,7 +96,8 @@
     <parameter name="authoritativeCopy"
                description="Boolean value, Specifies the Authoritative copy feature.
                If set to true the Authoritative copy feature is enable."/>
-    <parameter name="templatesUri" description="Contains a URI for an endpoint that you can use to retrieve the templates."/>
+    <parameter name="templatesUri"
+               description="Contains a URI for an endpoint that you can use to retrieve the templates."/>
     <parameter name="transactionId" description="Used to identify an envelope."/>
     <parameter name="useDisclosure" description="The documents to be signed."/>
     <parameter name="voidedDateTime" description="The date and time the envelope or template was voided."/>
@@ -100,6 +106,7 @@
     <parameter name="completedDocumentsOnly" description="Reserved for DocuSign."/>
     <parameter name="mergeRolesOnDraft"
                description="Boolean value. When set to true, template roles will be merged, and empty recipients will be removed."/>
+
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.documents" expression="$func:documents"/>
@@ -111,6 +118,7 @@
         <property name="uri.var.brandId" expression="$func:brandId"/>
         <property name="uri.var.emailBlurb" expression="$func:emailBlurb"/>
         <property name="uri.var.compositeTemplates" expression="$func:compositeTemplates"/>
+        <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
         <property name="uri.var.brandLock" expression="$func:brandLock"/>
         <property name="uri.var.certificateUri" expression="$func:certificateUri"/>
         <property name="uri.var.completedDateTime" expression="$func:completedDateTime"/>
@@ -166,6 +174,7 @@
             var brandId=mc.getProperty('uri.var.brandId');
             var emailBlurb=mc.getProperty('uri.var.emailBlurb');
             var compositeTemplates=mc.getProperty('uri.var.compositeTemplates');
+            var envelopeId=mc.getProperty('uri.var.envelopeId');
             var brandLock=mc.getProperty('uri.var.brandLock');
             var certificateUri=mc.getProperty('uri.var.certificateUri');
             var completedDateTime=mc.getProperty('uri.var.completedDateTime');
@@ -213,161 +222,175 @@
             var completedDocumentsOnly=mc.getProperty('completedDocumentsOnly');
             var mergeRolesOnDraft=mc.getProperty('mergeRolesOnDraft');
             var urlQuery = '';
-            var payload = mc.getPayloadJSON();
-            if (status != null && status != "") {
-                payload.status = status;
+            var query = '{';
+            if (status != "null" && status != "") {
+                query = query.concat('"'+'status":"' + status+'",');
             }
-            if (emailSubject != null && emailSubject != "") {
-                payload.emailSubject = emailSubject;
+            if (emailSubject != "null" && emailSubject != "") {
+                query = query.concat('"'+'emailSubject":"' + emailSubject+'",');
             }
             if (documents != null && documents != "" && documents!="[]") {
-                payload.documents = eval( "(" + documents + ")" );
+                var documents = eval( "('" + documents + "')" );
+                query = query.concat('"documents":' + documents +',');
             }
             if (recipients != null && recipients != "") {
-                payload.recipients = eval( "(" + recipients + ")" );
+                var recipients = eval( "('" + recipients + "')" );
+                query = query.concat('"recipients":' + recipients +',');
             }
             if (templateId != null && templateId != "") {
-                payload.templateId = templateId;
+                query = query.concat('"'+'templateId":"' + templateId+'",');
             }
             if (templateRoles != null && templateRoles != "" && templateRoles!="[]") {
-                payload.templateRoles = eval( "(" + templateRoles + ")" );
+                var templateRoles = eval( "('" + templateRoles + "')" );
+                query = query.concat('"templateRoles":' + templateRoles +',');
             }
-            if (brandId != null && brandId != "") {
-                payload.brandId = brandId;
+            if (brandId != "null" && brandId != "") {
+                query = query.concat('"'+'brandId":"' + brandId+'",');
             }
-            if (emailBlurb != null && emailBlurb != "") {
-                payload.emailBlurb = emailBlurb;
+            if (emailBlurb != "null" && emailBlurb != "") {
+                query = query.concat('"'+'emailBlurb":"' + emailBlurb+'",');
             }
             if (compositeTemplates != null && compositeTemplates != "" && compositeTemplates!="[]") {
-                payload.compositeTemplates = eval( "(" + compositeTemplates + ")" );
+                var compositeTemplates = eval( "('" + compositeTemplates + "')" );
+                query = query.concat('"compositeTemplates":' + compositeTemplates +',');
+            }
+            if (envelopeId != "null" && envelopeId != "") {
+                query = query.concat('"'+'envelopeId":"' + envelopeId +'",');
             }
             if (brandLock != null && brandLock != "") {
-                payload.brandLock = brandLock;
+                query = query.concat('"'+'brandLock":"' + brandLock +'",');
             }
             if (certificateUri != null && certificateUri != "") {
-                payload.certificateUri = certificateUri;
+                query = query.concat('"'+'certificateUri":"' + certificateUri +'",');
             }
             if (completedDateTime != null && completedDateTime != "") {
-                payload.completedDateTime = completedDateTime;
+                query = query.concat('"'+'completedDateTime":"' + completedDateTime +'",');
             }
             if (createdDateTime != null && createdDateTime != "") {
-                payload.createdDateTime = createdDateTime;
+                query = query.concat('"'+'createdDateTime":"' + createdDateTime +'",');
             }
             if (customFields != null && customFields != "" && customFields!="[]") {
-                payload.customFields = eval( "(" + customFields + ")" );
+                var customFields = eval( "('" + customFields + "')" );
+                query = query.concat('"customFields":' + customFields +',');
             }
             if (customFieldsUri != null && customFieldsUri != "") {
-                payload.customFieldsUri = customFieldsUri;
+                query = query.concat('"'+'customFieldsUri":"' + customFieldsUri +'",');
             }
             if (declinedDateTime != null && declinedDateTime != "") {
-                payload.declinedDateTime = declinedDateTime;
+                query = query.concat('"'+'declinedDateTime":"' + declinedDateTime +'",');
             }
             if (deletedDateTime != null && deletedDateTime != "") {
-                payload.deletedDateTime = deletedDateTime;
+                query = query.concat('"'+'deletedDateTime":"' + deletedDateTime +'",');
             }
             if (deliveredDateTime != null && deliveredDateTime != "") {
-                payload.deliveredDateTime = deliveredDateTime;
+                query = query.concat('"'+'deliveredDateTime":"' + deliveredDateTime +'",');
             }
             if (accessibility != null && accessibility != "") {
-                payload.accessibility = accessibility;
+                query = query.concat('"'+'accessibility":"' + accessibility +'",');
             }
             if (documentsCombinedUri != null && documentsCombinedUri != "") {
-                payload.documentsCombinedUri = documentsCombinedUri;
+                query = query.concat('"'+'documentsCombinedUri":"' + documentsCombinedUri +'",');
             }
             if (documentsUri != null && documentsUri != "") {
-                payload.documentsUri = documentsUri;
+                query = query.concat('"'+'documentsUri":"' + documentsUri +'",');
             }
             if (emailSettings != null && emailSettings != "" && emailSettings!="[]") {
-                payload.emailSettings = eval( "(" + emailSettings + ")" );
+                var emailSettings = eval( "('" + emailSettings + "')" );
+                query = query.concat('"emailSettings":' + emailSettings +',');
             }
             if (allowReassign != null && allowReassign != "") {
-                payload.allowReassign = allowReassign;
+                query = query.concat('"'+'allowReassign":"' + allowReassign +'",');
             }
             if (enableWetSign != null && enableWetSign != "") {
-                payload.enableWetSign = enableWetSign;
+                query = query.concat('"'+'enableWetSign":"' + enableWetSign +'",');
             }
             if (enforceSignerVisibility != null && enforceSignerVisibility != "") {
-                payload.enforceSignerVisibility = enforceSignerVisibility;
+                query = query.concat('"'+'enforceSignerVisibility":"' + enforceSignerVisibility +'",');
             }
             if (allowMarkup != null && allowMarkup != "") {
-                payload.allowMarkup = allowMarkup;
+                query = query.concat('"'+'allowMarkup":"' + allowMarkup +'",');
             }
             if (envelopeIdStamping != null && envelopeIdStamping != "") {
-                payload.envelopeIdStamping = envelopeIdStamping;
+                query = query.concat('"'+'envelopeIdStamping":"' + envelopeIdStamping +'",');
             }
             if (envelopeUri != null && envelopeUri != "") {
-                payload.envelopeUri = envelopeUri;
+                query = query.concat('"'+'envelopeUri":"' + envelopeUri +'",');
             }
             if (eventNotification != null && eventNotification != "" && eventNotification!="[]") {
-                payload.eventNotification = eval( "(" + eventNotification + ")" );
+                var eventNotification = eval( "('" + eventNotification + "')" );
+                query = query.concat('"eventNotification":' + eventNotification +',');
             }
             if (is21CFRPart11 != null && is21CFRPart11 != "") {
-                payload.is21CFRPart11 = is21CFRPart11;
+                query = query.concat('"'+'is21CFRPart11":"' + is21CFRPart11 +'",');
             }
             if (isUniversalSignatureEnvelope != null && isUniversalSignatureEnvelope != "") {
-                payload.isUniversalSignatureEnvelope = isUniversalSignatureEnvelope;
+                query = query.concat('"'+'isUniversalSignatureEnvelope":"' + isUniversalSignatureEnvelope +'",');
             }
             if (lastModifiedDateTime != null && lastModifiedDateTime != "") {
-                payload.lastModifiedDateTime = lastModifiedDateTime;
+                query = query.concat('"'+'lastModifiedDateTime":"' + lastModifiedDateTime +'",');
             }
             if (envelopeLocks != null && envelopeLocks != "" && envelopeLocks!="[]") {
-                payload.envelopeLocks = eval( "(" + envelopeLocks + ")" );
+                var envelopeLocks = eval( "('" + envelopeLocks + "')" );
+                query = query.concat('"envelopeLocks":' + envelopeLocks +',');
             }
             if (attachments != null && attachments != "" && attachments!="[]") {
-                payload.attachments = eval( "(" + attachments + ")" );
+                var attachments = eval( "('" + attachments + "')" );
+                query = query.concat('"attachments":' + attachments +',');
             }
             if (messageLock != null && messageLock != "") {
-                payload.messageLock = messageLock;
+                query = query.concat('"'+'messageLock":"' + messageLock +'",');
             }
             if (notification != null && notification != "" && notification!="[]") {
-                payload.notification = eval( "(" + notification + ")" );
+                var notification = eval( "('" + notification + "')" );
+                query = query.concat('"notification":' + notification +',');
             }
             if (notificationUri != null && notificationUri != "") {
-                payload.notificationUri = notificationUri;
+                query = query.concat('"'+'notificationUri":"' + notificationUri +'",');
             }
             if (purgeState != null && purgeState != "") {
-                payload.purgeState = purgeState;
+                query = query.concat('"'+'purgeState":"' + purgeState +'",');
             }
             if (allowRecipientRecursion != null && allowRecipientRecursion != "") {
-                payload.allowRecipientRecursion = allowRecipientRecursion;
+                query = query.concat('"'+'allowRecipientRecursion":"' + allowRecipientRecursion +'",');
             }
             if (recipientsLock != null && recipientsLock != "") {
-                payload.recipientsLock = recipientsLock;
+                query = query.concat('"'+'recipientsLock":"' + recipientsLock +'",');
             }
             if (recipientsUri != null && recipientsUri != "") {
-                payload.recipientsUri = recipientsUri;
+                query = query.concat('"'+'recipientsUri":"' + recipientsUri +'",');
             }
             if (sentDateTime != null && sentDateTime != "") {
-                payload.sentDateTime = sentDateTime;
+                query = query.concat('"'+'sentDateTime":"' + sentDateTime +'",');
             }
             if (signingLocation != null && signingLocation != "") {
-                payload.signingLocation = signingLocation;
+                query = query.concat('"'+'signingLocation":"' + signingLocation +'",');
             }
             if (asynchronous != null && asynchronous != "") {
-                payload.asynchronous = asynchronous;
+                query = query.concat('"'+'asynchronous":"' + asynchronous +'",');
             }
             if (statusChangedDateTime != null && statusChangedDateTime != "") {
-                payload.statusChangedDateTime = statusChangedDateTime;
+                query = query.concat('"'+'statusChangedDateTime":"' + statusChangedDateTime +'",');
             }
             if (authoritativeCopy != null && authoritativeCopy != "") {
-                payload.authoritativeCopy = authoritativeCopy;
+                query = query.concat('"'+'authoritativeCopy":"' + authoritativeCopy +'",');
             }
             if (templatesUri != null && templatesUri != "") {
-                payload.templatesUri = templatesUri;
+                query = query.concat('"'+'templatesUri":"' + templatesUri +'",');
             }
             if (transactionId != null && transactionId != "") {
-                payload.transactionId = transactionId;
+                query = query.concat('"'+'transactionId":"' + transactionId +'",');
             }
             if (useDisclosure != null && useDisclosure != "") {
-                payload.useDisclosure = useDisclosure;
+                query = query.concat('"'+'useDisclosure":"' + useDisclosure +'",');
             }
             if (voidedDateTime != null && voidedDateTime != "") {
-                payload.voidedDateTime = voidedDateTime;
+                query = query.concat('"'+'voidedDateTime":"' + voidedDateTime +'",');
             }
             if (voidedReason != null && voidedReason != "") {
-                payload.voidedReason = voidedReason;
+                query = query.concat('"'+'voidedReason":"' + voidedReason +'",');
             }
-            mc.setPayloadJSON(payload);
+            query = query.substring(0, query.length-1);
+            mc.setProperty('uri.var.query', query);
             if (cdseMode != null && cdseMode != ""){
                 urlQuery += 'cdse_mode=' + cdseMode + '&';
             }
@@ -383,6 +406,14 @@
             mc.setProperty('uri.var.urlQuery',urlQuery);
             ]]>
         </script>
+        <payloadFactory media-type="json">
+            <format>
+                $1}
+            </format>
+            <args>
+                <arg expression="$ctx:uri.var.query"/>
+            </args>
+        </payloadFactory>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">
