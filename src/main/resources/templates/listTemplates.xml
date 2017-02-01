@@ -47,7 +47,7 @@
     <parameter name="usedToDate" description="End of the search date range."/>
     <parameter name="userFilter"
                description="Sets if the templates shown in the response Valid values(owned_by_me,shared_with_me)."/>
-    <parameter name="optionalParameters" description="All the optional parameters are in the json format."/>
+    <parameter name="optionalParameters" description="All the optional parameters."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="count" expression="$func:count"/>
@@ -131,16 +131,11 @@
                 if (userFilter != null && userFilter != ""){
                     urlQuery += 'user_filter=' + userFilter + '&';
                 }
-                if (optionalParameters != null && optionalParameters != "") {
-                    var txt = '{"optionalParametersList":' + optionalParameters+'}';
-                    var obj = eval ("(" + txt + ")");
-                    for(var key in obj.optionalParametersList){
-                        var value=obj.optionalParametersList[key];
-                        urlQuery += key + '=' + value + '&';
-                    }
+                if (optionalParameters != null && optionalParameters != ""){
+                    urlQuery += optionalParameters;
                 }
                 if (urlQuery != null && urlQuery != ""){
-                    urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
+                    urlQuery = '?' + urlQuery;
                 }
                 mc.setProperty('uri.var.urlQuery',urlQuery);
             ]]>
