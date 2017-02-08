@@ -102,11 +102,12 @@
     <parameter name="useDisclosure" description="The documents to be signed."/>
     <parameter name="voidedDateTime" description="The date and time the envelope or template was voided."/>
     <parameter name="voidedReason" description="The reason the envelope or template was voided."/>
+    <parameter name="initialSentDateTime" description=""/>
+    <parameter name="autoNavigation" description=""/>
     <parameter name="cdseMode	" description="Reserved for DocuSign."/>
     <parameter name="completedDocumentsOnly" description="Reserved for DocuSign."/>
     <parameter name="mergeRolesOnDraft"
                description="Boolean value. When set to true, template roles will be merged, and empty recipients will be removed."/>
-
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.documents" expression="$func:documents"/>
@@ -161,6 +162,8 @@
         <property name="uri.var.useDisclosure" expression="$func:useDisclosure"/>
         <property name="uri.var.voidedDateTime" expression="$func:voidedDateTime"/>
         <property name="uri.var.voidedReason" expression="$func:voidedReason"/>
+        <property name="uri.var.initialSentDateTime" expression="$func:initialSentDateTime"/>
+        <property name="uri.var.autoNavigation" expression="$func:autoNavigation"/>
         <property name="cdseMode" expression="$func:cdseMode"/>
         <property name="completedDocumentsOnly" expression="$func:completedDocumentsOnly"/>
         <property name="mergeRolesOnDraft" expression="$func:mergeRolesOnDraft"/>
@@ -217,190 +220,198 @@
             var useDisclosure=mc.getProperty('uri.var.useDisclosure');
             var voidedDateTime=mc.getProperty('uri.var.voidedDateTime');
             var voidedReason=mc.getProperty('uri.var.voidedReason');
+            var initialSentDateTime=mc.getProperty('uri.var.initialSentDateTime');
+            var autoNavigation=mc.getProperty('uri.var.autoNavigation');
             //request URL param variables
             var cdseMode=mc.getProperty('cdseMode');
             var completedDocumentsOnly=mc.getProperty('completedDocumentsOnly');
             var mergeRolesOnDraft=mc.getProperty('mergeRolesOnDraft');
             var urlQuery = '';
             var query = '{';
-            if (status != "null" && status != "") {
+            if (status != "null" && status != null && status != "") {
                 query = query.concat('"'+'status":"' + status+'",');
             }
-            if (emailSubject != "null" && emailSubject != "") {
+            if (emailSubject != "null" && emailSubject != null && emailSubject != "") {
                 query = query.concat('"'+'emailSubject":"' + emailSubject+'",');
             }
-            if (documents != null && documents != "" && documents!="[]") {
+            if (documents != "null" && documents != null && documents != "" && documents!="[]") {
                 var documents = eval( "('" + documents + "')" );
                 query = query.concat('"documents":' + documents +',');
             }
-            if (recipients != null && recipients != "") {
+            if (recipients != "null" && recipients != null && recipients != "") {
                 var recipients = eval( "('" + recipients + "')" );
                 query = query.concat('"recipients":' + recipients +',');
             }
-            if (templateId != null && templateId != "") {
+            if (templateId != "null" && templateId != null && templateId != "") {
                 query = query.concat('"'+'templateId":"' + templateId+'",');
             }
-            if (templateRoles != null && templateRoles != "" && templateRoles!="[]") {
+            if (templateRoles != "null" && templateRoles != null && templateRoles != "" && templateRoles!="[]") {
                 var templateRoles = eval( "('" + templateRoles + "')" );
                 query = query.concat('"templateRoles":' + templateRoles +',');
             }
-            if (brandId != "null" && brandId != "") {
+            if (brandId != "null" && brandId != null && brandId != "") {
                 query = query.concat('"'+'brandId":"' + brandId+'",');
             }
-            if (emailBlurb != "null" && emailBlurb != "") {
+            if (emailBlurb != "null" && emailBlurb != null && emailBlurb != "") {
                 query = query.concat('"'+'emailBlurb":"' + emailBlurb+'",');
             }
-            if (compositeTemplates != null && compositeTemplates != "" && compositeTemplates!="[]") {
+            if (compositeTemplates != "null" && compositeTemplates != null && compositeTemplates != "" && compositeTemplates!="[]") {
                 var compositeTemplates = eval( "('" + compositeTemplates + "')" );
                 query = query.concat('"compositeTemplates":' + compositeTemplates +',');
             }
-            if (envelopeId != "null" && envelopeId != "") {
+            if (envelopeId != "null" && envelopeId != null && envelopeId != "") {
                 query = query.concat('"'+'envelopeId":"' + envelopeId +'",');
             }
-            if (brandLock != null && brandLock != "") {
+            if (brandLock != "null" && brandLock != null && brandLock != "") {
                 query = query.concat('"'+'brandLock":"' + brandLock +'",');
             }
-            if (certificateUri != null && certificateUri != "") {
+            if (certificateUri != "null" && certificateUri != null && certificateUri != "") {
                 query = query.concat('"'+'certificateUri":"' + certificateUri +'",');
             }
-            if (completedDateTime != null && completedDateTime != "") {
+            if (completedDateTime != "null" && completedDateTime != null && completedDateTime != "") {
                 query = query.concat('"'+'completedDateTime":"' + completedDateTime +'",');
             }
-            if (createdDateTime != null && createdDateTime != "") {
+            if (createdDateTime != "null" && createdDateTime != null && createdDateTime != "") {
                 query = query.concat('"'+'createdDateTime":"' + createdDateTime +'",');
             }
-            if (customFields != null && customFields != "" && customFields!="[]") {
+            if (customFields != "null" && customFields != null && customFields != "" && customFields!="[]") {
                 var customFields = eval( "('" + customFields + "')" );
                 query = query.concat('"customFields":' + customFields +',');
             }
-            if (customFieldsUri != null && customFieldsUri != "") {
+            if (customFieldsUri != "null" && customFieldsUri != null && customFieldsUri != "") {
                 query = query.concat('"'+'customFieldsUri":"' + customFieldsUri +'",');
             }
-            if (declinedDateTime != null && declinedDateTime != "") {
+            if (declinedDateTime != "null" && declinedDateTime != null && declinedDateTime != "") {
                 query = query.concat('"'+'declinedDateTime":"' + declinedDateTime +'",');
             }
-            if (deletedDateTime != null && deletedDateTime != "") {
+            if (deletedDateTime != "null" && deletedDateTime != null && deletedDateTime != "") {
                 query = query.concat('"'+'deletedDateTime":"' + deletedDateTime +'",');
             }
-            if (deliveredDateTime != null && deliveredDateTime != "") {
+            if (deliveredDateTime != "null" && deliveredDateTime != null && deliveredDateTime != "") {
                 query = query.concat('"'+'deliveredDateTime":"' + deliveredDateTime +'",');
             }
-            if (accessibility != null && accessibility != "") {
+            if (accessibility != "null" && accessibility != null && accessibility != "") {
                 query = query.concat('"'+'accessibility":"' + accessibility +'",');
             }
-            if (documentsCombinedUri != null && documentsCombinedUri != "") {
+            if (documentsCombinedUri != "null" && documentsCombinedUri != null && documentsCombinedUri != "") {
                 query = query.concat('"'+'documentsCombinedUri":"' + documentsCombinedUri +'",');
             }
-            if (documentsUri != null && documentsUri != "") {
+            if (documentsUri != "null" && documentsUri != null && documentsUri != "") {
                 query = query.concat('"'+'documentsUri":"' + documentsUri +'",');
             }
-            if (emailSettings != null && emailSettings != "" && emailSettings!="[]") {
+            if (emailSettings != "null" && emailSettings != null && emailSettings != "" && emailSettings!="[]") {
                 var emailSettings = eval( "('" + emailSettings + "')" );
                 query = query.concat('"emailSettings":' + emailSettings +',');
             }
-            if (allowReassign != null && allowReassign != "") {
+            if (allowReassign != "null" && allowReassign != null && allowReassign != "") {
                 query = query.concat('"'+'allowReassign":"' + allowReassign +'",');
             }
-            if (enableWetSign != null && enableWetSign != "") {
+            if (enableWetSign != "null" && enableWetSign != null && enableWetSign != "") {
                 query = query.concat('"'+'enableWetSign":"' + enableWetSign +'",');
             }
-            if (enforceSignerVisibility != null && enforceSignerVisibility != "") {
+            if (enforceSignerVisibility != "null" && enforceSignerVisibility != null && enforceSignerVisibility != "") {
                 query = query.concat('"'+'enforceSignerVisibility":"' + enforceSignerVisibility +'",');
             }
-            if (allowMarkup != null && allowMarkup != "") {
+            if (allowMarkup != "null" && allowMarkup != null && allowMarkup != "") {
                 query = query.concat('"'+'allowMarkup":"' + allowMarkup +'",');
             }
-            if (envelopeIdStamping != null && envelopeIdStamping != "") {
+            if (envelopeIdStamping != "null" && envelopeIdStamping != null && envelopeIdStamping != "") {
                 query = query.concat('"'+'envelopeIdStamping":"' + envelopeIdStamping +'",');
             }
-            if (envelopeUri != null && envelopeUri != "") {
+            if (envelopeUri != "null" && envelopeUri != null && envelopeUri != "") {
                 query = query.concat('"'+'envelopeUri":"' + envelopeUri +'",');
             }
-            if (eventNotification != null && eventNotification != "" && eventNotification!="[]") {
+            if (eventNotification != "null" && eventNotification != null && eventNotification != "" && eventNotification!="[]") {
                 var eventNotification = eval( "('" + eventNotification + "')" );
                 query = query.concat('"eventNotification":' + eventNotification +',');
             }
-            if (is21CFRPart11 != null && is21CFRPart11 != "") {
+            if (is21CFRPart11 != "null" && is21CFRPart11 != null && is21CFRPart11 != "") {
                 query = query.concat('"'+'is21CFRPart11":"' + is21CFRPart11 +'",');
             }
-            if (isUniversalSignatureEnvelope != null && isUniversalSignatureEnvelope != "") {
+            if (isUniversalSignatureEnvelope != "null" && isUniversalSignatureEnvelope != null && isUniversalSignatureEnvelope != "") {
                 query = query.concat('"'+'isUniversalSignatureEnvelope":"' + isUniversalSignatureEnvelope +'",');
             }
-            if (lastModifiedDateTime != null && lastModifiedDateTime != "") {
+            if (lastModifiedDateTime != "null" && lastModifiedDateTime != null && lastModifiedDateTime != "") {
                 query = query.concat('"'+'lastModifiedDateTime":"' + lastModifiedDateTime +'",');
             }
-            if (envelopeLocks != null && envelopeLocks != "" && envelopeLocks!="[]") {
+            if (envelopeLocks != "null" && envelopeLocks != null && envelopeLocks != "" && envelopeLocks!="[]") {
                 var envelopeLocks = eval( "('" + envelopeLocks + "')" );
                 query = query.concat('"envelopeLocks":' + envelopeLocks +',');
             }
-            if (attachments != null && attachments != "" && attachments!="[]") {
+            if (attachments != "null" && attachments != null && attachments != "" && attachments!="[]") {
                 var attachments = eval( "('" + attachments + "')" );
                 query = query.concat('"attachments":' + attachments +',');
             }
-            if (messageLock != null && messageLock != "") {
+            if (messageLock != "null" && messageLock != null && messageLock != "") {
                 query = query.concat('"'+'messageLock":"' + messageLock +'",');
             }
-            if (notification != null && notification != "" && notification!="[]") {
+            if (notification != "null" && notification != null && notification != "" && notification!="[]") {
                 var notification = eval( "('" + notification + "')" );
                 query = query.concat('"notification":' + notification +',');
             }
-            if (notificationUri != null && notificationUri != "") {
+            if (notificationUri != "null" && notificationUri != null && notificationUri != "") {
                 query = query.concat('"'+'notificationUri":"' + notificationUri +'",');
             }
-            if (purgeState != null && purgeState != "") {
+            if (purgeState != "null" && purgeState != null && purgeState != "") {
                 query = query.concat('"'+'purgeState":"' + purgeState +'",');
             }
-            if (allowRecipientRecursion != null && allowRecipientRecursion != "") {
+            if (allowRecipientRecursion != "null" && allowRecipientRecursion != null && allowRecipientRecursion != "") {
                 query = query.concat('"'+'allowRecipientRecursion":"' + allowRecipientRecursion +'",');
             }
-            if (recipientsLock != null && recipientsLock != "") {
+            if (recipientsLock != "null" && recipientsLock != null && recipientsLock != "") {
                 query = query.concat('"'+'recipientsLock":"' + recipientsLock +'",');
             }
-            if (recipientsUri != null && recipientsUri != "") {
+            if (recipientsUri != "null" && recipientsUri != null && recipientsUri != "") {
                 query = query.concat('"'+'recipientsUri":"' + recipientsUri +'",');
             }
-            if (sentDateTime != null && sentDateTime != "") {
+            if (sentDateTime != "null" && sentDateTime != null && sentDateTime != "") {
                 query = query.concat('"'+'sentDateTime":"' + sentDateTime +'",');
             }
-            if (signingLocation != null && signingLocation != "") {
+            if (signingLocation != "null" && signingLocation != null && signingLocation != "") {
                 query = query.concat('"'+'signingLocation":"' + signingLocation +'",');
             }
-            if (asynchronous != null && asynchronous != "") {
+            if (asynchronous != "null" && asynchronous != null && asynchronous != "") {
                 query = query.concat('"'+'asynchronous":"' + asynchronous +'",');
             }
-            if (statusChangedDateTime != null && statusChangedDateTime != "") {
+            if (statusChangedDateTime != "null" && statusChangedDateTime != null && statusChangedDateTime != "") {
                 query = query.concat('"'+'statusChangedDateTime":"' + statusChangedDateTime +'",');
             }
-            if (authoritativeCopy != null && authoritativeCopy != "") {
+            if (authoritativeCopy != "null" && authoritativeCopy != null && authoritativeCopy != "") {
                 query = query.concat('"'+'authoritativeCopy":"' + authoritativeCopy +'",');
             }
-            if (templatesUri != null && templatesUri != "") {
+            if (templatesUri != "null" && templatesUri != null && templatesUri != "") {
                 query = query.concat('"'+'templatesUri":"' + templatesUri +'",');
             }
-            if (transactionId != null && transactionId != "") {
+            if (transactionId != "null" && transactionId != null && transactionId != "") {
                 query = query.concat('"'+'transactionId":"' + transactionId +'",');
             }
-            if (useDisclosure != null && useDisclosure != "") {
+            if (useDisclosure != "null" && useDisclosure != null && useDisclosure != "") {
                 query = query.concat('"'+'useDisclosure":"' + useDisclosure +'",');
             }
-            if (voidedDateTime != null && voidedDateTime != "") {
+            if (voidedDateTime != "null" && voidedDateTime != null && voidedDateTime != "") {
                 query = query.concat('"'+'voidedDateTime":"' + voidedDateTime +'",');
             }
-            if (voidedReason != null && voidedReason != "") {
+            if (voidedReason != "null" && voidedReason != null && voidedReason != "") {
                 query = query.concat('"'+'voidedReason":"' + voidedReason +'",');
+            }
+            if (initialSentDateTime != "null" && initialSentDateTime != null && initialSentDateTime != "") {
+                query = query.concat('"'+'initialSentDateTime":"' + initialSentDateTime +'",');
+            }
+            if (autoNavigation != "null" && autoNavigation != null && autoNavigation != "") {
+                query = query.concat('"'+'autoNavigation":"' + autoNavigation +'",');
             }
             query = query.substring(0, query.length-1);
             mc.setProperty('uri.var.query', query);
-            if (cdseMode != null && cdseMode != ""){
+            if (cdseMode != "null" && cdseMode != null && cdseMode != ""){
                 urlQuery += 'cdse_mode=' + cdseMode + '&';
             }
-            if (completedDocumentsOnly != null && completedDocumentsOnly != ""){
+            if (completedDocumentsOnly != "null" && completedDocumentsOnly != null && completedDocumentsOnly != ""){
                 urlQuery += 'completed_documents_only=' + completedDocumentsOnly + '&';
             }
-            if (mergeRolesOnDraft != null && mergeRolesOnDraft != ""){
+            if (mergeRolesOnDraft != "null" && mergeRolesOnDraft != null && mergeRolesOnDraft != ""){
                 urlQuery += 'merge_roles_on_draft=' + mergeRolesOnDraft + '&';
             }
-            if (urlQuery != null && urlQuery != ""){
+            if (urlQuery != "null" && urlQuery != null && urlQuery != ""){
                 urlQuery = '?' + urlQuery.toString().substring(0, urlQuery.toString().lastIndexOf("&"));
             }
             mc.setProperty('uri.var.urlQuery',urlQuery);
