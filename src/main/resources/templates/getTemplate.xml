@@ -21,15 +21,32 @@
     <parameter name="accountId"
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="templateId" description="The ID of the template being accessed."/>
+    <parameter name="include"
+               description="A comma separated list of additional template attributes to include in the response."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.templateId" expression="$func:templateId"/>
+        <property name="include" expression="$func:include"/>
+        <script language="js">
+            <![CDATA[
+                //request body param variables
+                var include = mc.getProperty('include');
+                var urlQuery = '';
+                if (include != "null" && include != null && include != ""){
+                   urlQuery += 'include=' + include;
+                }
+                if (urlQuery != null && urlQuery != ""){
+                    urlQuery = '?' + urlQuery;
+                }
+                mc.setProperty('uri.var.urlQuery',urlQuery);
+            ]]>
+        </script>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates/{uri.var.templateId}"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates/{uri.var.templateId}{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
@@ -37,7 +54,7 @@
                 <call>
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates/{uri.var.templateId}"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/templates/{uri.var.templateId}{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>

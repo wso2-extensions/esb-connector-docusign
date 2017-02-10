@@ -22,15 +22,23 @@
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
     <parameter name="include" description="This is Optional query parameters."/>
+    <parameter name="advancedUpdate" description="When true, envelope information can be added or modified."/>
     <sequence>
         <property name="uri.var.apiParameters" value=""/>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
         <property name="uri.var.include" expression="$func:include"/>
+        <property name="uri.var.advancedUpdate" expression="$func:advancedUpdate"/>
         <filter xpath="(not($ctx:uri.var.include = '' or (not(string($ctx:uri.var.include)))))">
             <then>
                 <property name="uri.var.apiParameters"
-                          expression="fn:concat($ctx:uri.var.apiParameters, 'include=', $ctx:uri.var.include)"/>
+                          expression="fn:concat($ctx:uri.var.apiParameters, 'include=', $ctx:uri.var.include, '&amp;')"/>
+            </then>
+        </filter>
+        <filter xpath="(not($ctx:uri.var.advancedUpdate = '' or (not(string($ctx:uri.var.advancedUpdate)))))">
+            <then>
+                <property name="uri.var.apiParameters"
+                          expression="fn:concat($ctx:uri.var.apiParameters, 'advanced_update=', $ctx:uri.var.advancedUpdate, '&amp;')"/>
             </then>
         </filter>
         <filter source="$ctx:docusignBlocking" regex="true">

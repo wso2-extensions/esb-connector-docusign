@@ -17,11 +17,10 @@
   ~ under the License.
   -->
 <template name="createRecipient" xmlns="http://ws.apache.org/ns/synapse">
-    <!-- Required parameters -->
     <parameter name="accountId"
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
-    <parameter name="userName"
+    <parameter name="recipientUserName"
                description="Specifies the username of the recipient. You can use either email and userName or
                userId to identify the recipient."/>
     <parameter name="authenticationMethod" description="This is used to authenticate the recipient/signer."/>
@@ -31,7 +30,6 @@
     <parameter name="email" description="Specifies the email of the recipient."/>
     <parameter name="returnUrl"
                description="The url the recipient is redirected to after the signing session has ended."/>
-    <!-- Optional parameters -->
     <parameter name="pingFrequency"
                description="This is the interval, in seconds, between pings on the pingUr, Only used if pingUrl is specified."/>
     <parameter name="authenticationInstant"
@@ -46,10 +44,12 @@
     <parameter name="pingUrl"
                description="A client Url to be pinged by the DocuSign Signing experience to indicate to the client
                that Signing is active."/>
+    <parameter name="xFrameOptions" description=""/>
+    <parameter name="xFrameOptionsAllowFromUrl" description=""/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
-        <property name="uri.var.userName" expression="$func:userName"/>
+        <property name="uri.var.recipientUserName" expression="$func:recipientUserName"/>
         <property name="uri.var.authenticationMethod" expression="$func:authenticationMethod"/>
         <property name="uri.var.clientUserId" expression="$func:clientUserId"/>
         <property name="uri.var.email" expression="$func:email"/>
@@ -61,26 +61,15 @@
         <property name="uri.var.securityDomain" expression="$func:securityDomain"/>
         <property name="uri.var.userId" expression="$func:userId"/>
         <property name="uri.var.pingUrl" expression="$func:pingUrl"/>
-        <payloadFactory media-type="json">
-            <format>
-                {
-                "userName":"$1",
-                "authenticationMethod":"$2",
-                "clientUserId":"$3",
-                "email":"$4",
-                "returnUrl":"$5"
-                }
-            </format>
-            <args>
-                <arg expression="$ctx:uri.var.userName"/>
-                <arg expression="$ctx:uri.var.authenticationMethod"/>
-                <arg expression="$ctx:uri.var.clientUserId"/>
-                <arg expression="$ctx:uri.var.email"/>
-                <arg expression="$ctx:uri.var.returnUrl"/>
-            </args>
-        </payloadFactory>
+        <property name="uri.var.xFrameOptions" expression="$func:xFrameOptions"/>
+        <property name="uri.var.xFrameOptionsAllowFromUrl" expression="$func:xFrameOptionsAllowFromUrl"/>
         <script language="js"><![CDATA[
             //request body param variables
+            var recipientUserName=mc.getProperty('uri.var.recipientUserName');
+            var authenticationMethod=mc.getProperty('uri.var.authenticationMethod');
+            var clientUserId=mc.getProperty('uri.var.clientUserId');
+            var email=mc.getProperty('uri.var.email');
+            var returnUrl=mc.getProperty('uri.var.returnUrl');
             var pingFrequency=mc.getProperty('uri.var.pingFrequency');
             var authenticationInstant=mc.getProperty('uri.var.authenticationInstant');
             var recipientId=mc.getProperty('uri.var.recipientId');
@@ -88,33 +77,63 @@
             var securityDomain=mc.getProperty('uri.var.securityDomain');
             var userId=mc.getProperty('uri.var.userId');
             var pingUrl=mc.getProperty('uri.var.pingUrl');
+            var xFrameOptions=mc.getProperty('uri.var.xFrameOptions');
+            var xFrameOptionsAllowFromUrl=mc.getProperty('uri.var.xFrameOptionsAllowFromUrl');
             //Get the existing payload
-            var payload = mc.getPayloadJSON();
-            if (pingFrequency != null && pingFrequency != "") {
-                payload["pingFrequency"]=pingFrequency;
+            var query = '{';
+            if (recipientUserName != "null" && recipientUserName != null && recipientUserName != "") {
+                query = query.concat('"'+'userName":"' + recipientUserName+'",');
             }
-            if (authenticationInstant != null && authenticationInstant != "") {
-                payload["authenticationInstant"]=authenticationInstant;
+            if (authenticationMethod != "null" && authenticationMethod != null && authenticationMethod != "") {
+                query = query.concat('"'+'authenticationMethod":"' + authenticationMethod+'",');
             }
-            if (recipientId != null && recipientId != "") {
-                payload["recipientId"]=recipientId;
+            if (clientUserId != "null" && clientUserId != null && clientUserId != "") {
+                query = query.concat('"'+'clientUserId":"' + clientUserId+'",');
             }
-            if (assertionId != null && assertionId != "") {
-                payload["assertionId"]=assertionId;
+            if (email != "null" && email != null && email != "") {
+                query = query.concat('"'+'email":"' + email+'",');
             }
-            if (securityDomain != null && securityDomain != "") {
-                payload["securityDomain"]=securityDomain;
+            if (returnUrl != "null" && returnUrl != null && returnUrl != "") {
+                query = query.concat('"'+'returnUrl":"' + returnUrl+'",');
             }
-            if (userId != null && userId != "") {
-                payload["userId"]=userId;
+            if (pingFrequency != "null" && pingFrequency != null && pingFrequency != "") {
+                query = query.concat('"'+'pingFrequency":"' + pingFrequency+'",');
             }
-            if (pingUrl != null && pingUrl != "") {
-                payload["pingUrl"]=pingUrl;
+            if (authenticationInstant != "null" && authenticationInstant != null && authenticationInstant != "") {
+                query = query.concat('"'+'authenticationInstant":"' + authenticationInstant+'",');
             }
-            //Set the newly constructed payload
-            mc.setPayloadJSON(payload);
+            if (recipientId != "null" && recipientId != null && recipientId != "") {
+                query = query.concat('"'+'recipientId":"' + recipientId+'",');
+            }
+            if (assertionId != "null" && assertionId != null && assertionId != "") {
+                query = query.concat('"'+'assertionId":"' + assertionId+'",');
+            }
+            if (securityDomain != "null" && securityDomain != null && securityDomain != "") {
+                query = query.concat('"'+'securityDomain":"' + securityDomain+'",');
+            }
+            if (userId != "null" && userId != null && userId != "") {
+                query = query.concat('"'+'userId":"' + userId+'",');
+            }
+            if (pingUrl != "null" && pingUrl != null && pingUrl != "") {
+                query = query.concat('"'+'pingUrl":"' + pingUrl+'",');
+            }
+            if (xFrameOptions != "null" && xFrameOptions != null && xFrameOptions != "") {
+                query = query.concat('"'+'xFrameOptions":"' + xFrameOptions+'",');
+            }
+            if (xFrameOptionsAllowFromUrl != "null" && xFrameOptionsAllowFromUrl != null && xFrameOptionsAllowFromUrl != "") {
+                query = query.concat('"'+'xFrameOptionsAllowFromUrl":"' + xFrameOptionsAllowFromUrl+'",');
+            }
+            query = query.substring(0, query.length-1);
+            mc.setProperty('uri.var.query', query);
         ]]></script>
-
+        <payloadFactory media-type="json">
+            <format>
+                $1}
+            </format>
+            <args>
+                <arg expression="$ctx:uri.var.query"/>
+            </args>
+        </payloadFactory>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">

@@ -37,16 +37,16 @@
             var templateId=mc.getProperty('uri.var.templateId');
             var templateRoles=mc.getProperty('uri.var.templateRoles');
             var payload = mc.getPayloadJSON();
-            if (templateId != null && templateId != "") {
+            if (templateId != "null" && templateId != null && templateId != "") {
                 payload.templateId = templateId;
             }
-            if (status != null && status != "") {
+            if (status != "null" && status != null && status != "") {
                 payload.status = status;
             }
-            if (emailSubject != null && emailSubject != "") {
+            if (emailSubject != "null" && emailSubject != null && emailSubject != "") {
                 payload.emailSubject = emailSubject;
             }
-            if (templateRoles != null && templateRoles != "" && templateRoles!="[]") {
+            if (templateRoles != "null" && templateRoles != null && templateRoles != "" && templateRoles!="[]") {
                 payload.templateRoles = eval( "(" + templateRoles + ")" );
             }
             //Set the newly constructed payload

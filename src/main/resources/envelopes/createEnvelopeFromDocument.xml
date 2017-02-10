@@ -35,16 +35,16 @@
             var recipients = mc.getProperty('uri.var.recipients');
             var status = mc.getProperty('uri.var.status');
             var payload = mc.getPayloadJSON();
-            if (status != null && status != "") {
+            if (status != "null" && status != null && status != "") {
                 payload.status = status;
             }
-            if (emailSubject != null && emailSubject != "") {
+            if (emailSubject != "null" && emailSubject != null && emailSubject != "") {
                 payload.emailSubject = emailSubject;
             }
-            if (documents != null && documents != "" && documents!="[]") {
+            if (documents != "null" && documents != null && documents != "" && documents!="[]") {
                 payload.documents = eval( "(" + documents + ")" );
             }
-            if (recipients != null && recipients != "") {
+            if (recipients != "null" && recipients != null && recipients != "") {
                 payload.recipients = eval( "(" + recipients + ")" );
             }
             mc.setPayloadJSON(payload);

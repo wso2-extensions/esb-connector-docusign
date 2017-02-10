@@ -31,7 +31,7 @@
                 //request body param variables
                 var applyDocumentFields = mc.getProperty('applyDocumentFields');
                 var urlQuery = '';
-                if (applyDocumentFields != null && applyDocumentFields != ""){
+                if (applyDocumentFields != "null" && applyDocumentFields != null && applyDocumentFields != ""){
                     urlQuery += 'apply_document_fields=' + applyDocumentFields + '&';
                 }
                 if (urlQuery != null && urlQuery != ""){
