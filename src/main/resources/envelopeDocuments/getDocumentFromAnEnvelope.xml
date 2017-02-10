@@ -22,17 +22,70 @@
                description="The accountId of the account that the user is using, returned in the Login response."/>
     <parameter name="envelopeId" description="The envelopeId Guid of the envelope being accessed."/>
     <parameter name="documentId" description="The ID of the document being accessed."/>
+    <!-- Optional parameters -->
+    <parameter name="certificate" description="The ID of the document being accessed."/>
+    <parameter name="encoding" description="The ID of the document being accessed."/>
+    <parameter name="encrypt" description="The ID of the document being accessed."/>
+    <parameter name="language" description="The ID of the document being accessed."/>
+    <parameter name="recipientId" description="The ID of the document being accessed."/>
+    <parameter name="showChanges" description="The ID of the document being accessed."/>
+    <parameter name="watermark" description="The ID of the document being accessed."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
         <property name="uri.var.documentId" expression="$func:documentId"/>
+        <property name="certificate" expression="$func:certificate"/>
+        <property name="encoding" expression="$func:encoding"/>
+        <property name="encrypt" expression="$func:encrypt"/>
+        <property name="language" expression="$func:language"/>
+        <property name="recipientId" expression="$func:recipientId"/>
+        <property name="showChanges" expression="$func:showChanges"/>
+        <property name="watermark" expression="$func:watermark"/>
         <property action="remove" name="Accept-Encoding" scope="transport"/>
+        <script language="js">
+            <![CDATA[
+                //request body param variables
+                var certificate = mc.getProperty('certificate');
+                var encoding = mc.getProperty('encoding');
+                var encrypt = mc.getProperty('encrypt');
+                var language = mc.getProperty('language');
+                var recipientId = mc.getProperty('recipientId');
+                var showChanges = mc.getProperty('showChanges');
+                var watermark = mc.getProperty('watermark');
+                var urlQuery = '';
+                if (certificate != "null" && certificate != null && certificate != ""){
+                    urlQuery += 'certificate=' + certificate + '&';
+                }
+                if (encoding != "null" && encoding != null && encoding != ""){
+                    urlQuery += 'encoding=' + encoding + '&';
+                }
+                if (encrypt != "null" && encrypt != null && encrypt != ""){
+                    urlQuery += 'encrypt=' + encrypt + '&';
+                }
+                if (language != "null" && language != null && language != ""){
+                    urlQuery += 'language=' + language + '&';
+                }
+                if (recipientId != "null" && recipientId != null && recipientId != ""){
+                    urlQuery += 'recipient_id=' + recipientId + '&';
+                }
+                if (showChanges != "null" && showChanges != null && showChanges != ""){
+                    urlQuery += 'show_changes=' + showChanges + '&';
+                }
+                if (watermark != "null" && watermark != null && watermark != ""){
+                    urlQuery += 'watermark=' + watermark + '&';
+                }
+                if (urlQuery != null && urlQuery != ""){
+                    urlQuery = '?' + urlQuery;
+                }
+                mc.setProperty('uri.var.urlQuery',urlQuery);
+            ]]>
+        </script>
         <filter source="$ctx:docusignBlocking" regex="true">
             <then>
                 <call blocking="true">
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents/{uri.var.documentId}"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents/{uri.var.documentId}{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
@@ -40,7 +93,7 @@
                 <call>
                     <endpoint>
                         <http method="get"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents/{uri.var.documentId}"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/documents/{uri.var.documentId}{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>

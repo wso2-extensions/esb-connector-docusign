@@ -32,19 +32,19 @@
         <filter xpath="boolean($ctx:uri.var.includeApiPassword)">
             <then>
                 <property name="uri.var.apiParameters"
-                          expression="fn:concat($ctx:uri.var.apiParameters, 'api_password=', $ctx:uri.var.includeApiPassword)"/>
+                          expression="fn:concat($ctx:uri.var.apiParameters, 'api_password=', $ctx:uri.var.includeApiPassword, '&amp;')"/>
             </then>
         </filter>
         <filter xpath="boolean($ctx:uri.var.includeAccountIDGuid)">
             <then>
                 <property name="uri.var.apiParameters"
-                          expression="fn:concat($ctx:uri.var.apiParameters, '&amp;include_account_id_guid=', $ctx:uri.var.includeAccountIDGuid)"/>
+                          expression="fn:concat($ctx:uri.var.apiParameters, 'include_account_id_guid=', $ctx:uri.var.includeAccountIDGuid, '&amp;')"/>
             </then>
         </filter>
         <filter xpath="boolean($ctx:uri.var.loginSetting)">
             <then>
                 <property name="uri.var.apiParameters"
-                          expression="fn:concat($ctx:uri.var.apiParameters, '&amp;login_settings=', $ctx:uri.var.loginSetting)"/>
+                          expression="fn:concat($ctx:uri.var.apiParameters, 'login_settings=', $ctx:uri.var.loginSetting, '&amp;')"/>
             </then>
         </filter>
         <filter source="$ctx:docusignBlocking" regex="true">

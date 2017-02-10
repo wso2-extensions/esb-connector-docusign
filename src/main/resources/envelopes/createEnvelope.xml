@@ -104,7 +104,7 @@
     <parameter name="voidedReason" description="The reason the envelope or template was voided."/>
     <parameter name="initialSentDateTime" description=""/>
     <parameter name="autoNavigation" description=""/>
-    <parameter name="cdseMode	" description="Reserved for DocuSign."/>
+    <parameter name="cdseMode" description="Reserved for DocuSign."/>
     <parameter name="completedDocumentsOnly" description="Reserved for DocuSign."/>
     <parameter name="mergeRolesOnDraft"
                description="Boolean value. When set to true, template roles will be merged, and empty recipients will be removed."/>

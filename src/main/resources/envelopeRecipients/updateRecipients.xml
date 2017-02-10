@@ -41,6 +41,9 @@
                description="Identifies a recipient that can, but is not required to, add name and email information for
                 recipients at the same or subsequent level in the routing order."/>
     <parameter name="recipientCount" description="The number of recipients."/>
+    <parameter name="resendEnvelope"
+               description="When set to true, resends the envelope if the new recipient's routing order is before or
+               the same as the envelope’s next recipient.."/>
     <sequence>
         <property name="uri.var.accountId" expression="$func:accountId"/>
         <property name="uri.var.envelopeId" expression="$func:envelopeId"/>
@@ -54,6 +57,7 @@
         <property name="uri.var.inPersonSigners" expression="$func:inPersonSigners"/>
         <property name="uri.var.intermediaries" expression="$func:intermediaries"/>
         <property name="uri.var.recipientCount" expression="$func:recipientCount"/>
+        <property name="uri.var.resendEnvelope" expression="$func:resendEnvelope"/>
         <script language="js"><![CDATA[
             //request body param variables
             var carbonCopies=mc.getProperty('uri.var.carbonCopies');
@@ -66,39 +70,48 @@
             var inPersonSigners=mc.getProperty('uri.var.inPersonSigners');
             var intermediaries=mc.getProperty('uri.var.intermediaries');
             var recipientCount=mc.getProperty('uri.var.recipientCount');
+            var resendEnvelope=mc.getProperty('uri.var.resendEnvelope');
+            var urlQuery = "";
             var payload = mc.getPayloadJSON();
-            if(signers != null && signers!="" && signers!="[]") {
+            if(signers != "null" && signers != null && signers!="" && signers!="[]") {
                 payload.signers = eval( "(" + signers + ")" );
             }
-            if(carbonCopies != null && carbonCopies!="" && carbonCopies!="[]") {
+            if(carbonCopies != "null" && carbonCopies != null && carbonCopies!="" && carbonCopies!="[]") {
                 payload.carbonCopies = eval( "(" + carbonCopies + ")" );
             }
-            if(agents != null && agents!="" && agents!="[]") {
+            if(agents != "null" && agents != null && agents!="" && agents!="[]") {
                 payload.agents = eval( "(" + agents + ")" );
             }
-            if(certifiedDeliveries != null && certifiedDeliveries!="" && certifiedDeliveries!="[]") {
+            if(certifiedDeliveries != "null" && certifiedDeliveries != null && certifiedDeliveries!="" && certifiedDeliveries!="[]") {
                 payload.certifiedDeliveries = eval( "(" + certifiedDeliveries + ")" );
             }
-            if (currentRoutingOrder != null && currentRoutingOrder != "") {
+            if (currentRoutingOrder != "null" && currentRoutingOrder != null && currentRoutingOrder != "") {
                 payload.currentRoutingOrder = currentRoutingOrder;
             }
-            if(editors != null && editors!="" && editors!="[]") {
+            if(editors != "null" && editors != null && editors!="" && editors!="[]") {
                 payload.editors = eval( "(" + editors + ")" );
             }
-            if(errorDetails != null && errorDetails!="") {
+            if(errorDetails != "null" && errorDetails != null && errorDetails!="") {
                 payload.errorDetails = eval( "(" + errorDetails + ")" );
             }
-            if(inPersonSigners != null && inPersonSigners!="" && inPersonSigners!="[]") {
+            if(inPersonSigners != "null" && inPersonSigners != null && inPersonSigners!="" && inPersonSigners!="[]") {
                 payload.inPersonSigners = eval( "(" + inPersonSigners + ")" );
             }
-            if(intermediaries != null && intermediaries!="" && intermediaries!="[]") {
+            if(intermediaries != "null" && intermediaries != null && intermediaries!="" && intermediaries!="[]") {
                 payload.intermediaries = eval( "(" + intermediaries + ")" );
             }
-            if (recipientCount != null && recipientCount != "") {
+            if (recipientCount != "null" && recipientCount != null && recipientCount != "") {
                 payload.recipientCount = recipientCount;
+            }
+            if (resendEnvelope != "null" && resendEnvelope != null && resendEnvelope != "") {
+                    urlQuery += 'resend_envelope=' + resendEnvelope;
             }
             //Set the newly constructed payload
             mc.setPayloadJSON(payload);
+            if (urlQuery != null && urlQuery != ""){
+                    urlQuery = '?' + urlQuery;
+            }
+            mc.setProperty('uri.var.urlQuery',urlQuery);
         ]]>
         </script>
         <filter source="$ctx:docusignBlocking" regex="true">
@@ -106,7 +119,7 @@
                 <call blocking="true">
                     <endpoint>
                         <http method="put"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </then>
@@ -114,7 +127,7 @@
                 <call>
                     <endpoint>
                         <http method="put"
-                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients"/>
+                              uri-template="{uri.var.apiUrl}/restapi/{uri.var.apiVersion}/accounts/{uri.var.accountId}/envelopes/{uri.var.envelopeId}/recipients{+uri.var.urlQuery}"/>
                     </endpoint>
                 </call>
             </else>

@@ -86,52 +86,52 @@
                 var userFilter = mc.getProperty('userFilter');
                 var optionalParameters = mc.getProperty('optionalParameters');
                 var urlQuery = '';
-                if (count != null && count != ""){
+                if (count != "null" && count != null && count != ""){
                    urlQuery += 'count=' + count + '&';
                 }
-                if (folder != null && folder != ""){
+                if (folder != "null" && folder != null && folder != ""){
                    urlQuery += 'folder=' + folder + '&';
                 }
-                if (folderIds != null && folderIds != ""){
+                if (folderIds != "null" && folderIds != null && folderIds != ""){
                    urlQuery += 'folder_ids=' + folderIds + '&';
                 }
-                if (fromDate != null && fromDate != ""){
+                if (fromDate != "null" && fromDate != null && fromDate != ""){
                    urlQuery += 'from_date=' + fromDate + '&';
                 }
-                if (include != null && include != ""){
+                if (include != "null" && include != null && include != ""){
                     urlQuery += 'include=' + include + '&';
                 }
-                if (order != null && order != ""){
+                if (order != "null" && order != null && order != ""){
                     urlQuery += 'order=' + order + '&';
                 }
-                if (orderBy != null && orderBy != ""){
+                if (orderBy != "null" && orderBy != null && orderBy != ""){
                     urlQuery += 'order_by=' + orderBy + '&';
                 }
-                if (searchText != null && searchText != ""){
+                if (searchText != "null" && searchText != null && searchText != ""){
                     urlQuery += 'search_text=' + searchText + '&';
                 }
-                if (shared != null && shared != ""){
+                if (shared != "null" && shared != null && shared != ""){
                     urlQuery += 'shared=' + shared + '&';
                 }
-                if (sharedByMe != null && sharedByMe != ""){
+                if (sharedByMe != "null" && sharedByMe != null && sharedByMe != ""){
                     urlQuery += 'shared_by_me=' + sharedByMe + '&';
                 }
-                if (startPosition != null && startPosition != ""){
+                if (startPosition != "null" && startPosition != null && startPosition != ""){
                     urlQuery += 'start_position=' + startPosition + '&';
                 }
-                if (toDate != null && toDate != ""){
+                if (toDate != "null" && toDate != null && toDate != ""){
                     urlQuery += 'to_date=' + toDate + '&';
                 }
-                if (usedFromDate != null && usedFromDate != ""){
+                if (usedFromDate != "null" && usedFromDate != null && usedFromDate != ""){
                     urlQuery += 'used_from_date=' + usedFromDate + '&';
                 }
-                if (usedToDate != null && usedToDate != ""){
+                if (usedToDate != "null" && usedToDate != null && usedToDate != ""){
                     urlQuery += 'used_to_date=' + usedToDate + '&';
                 }
-                if (userFilter != null && userFilter != ""){
+                if (userFilter != "null" && userFilter != null && userFilter != ""){
                     urlQuery += 'user_filter=' + userFilter + '&';
                 }
-                if (optionalParameters != null && optionalParameters != ""){
+                if (optionalParameters != "null" && optionalParameters != null && optionalParameters != ""){
                     urlQuery += optionalParameters;
                 }
                 if (urlQuery != null && urlQuery != ""){

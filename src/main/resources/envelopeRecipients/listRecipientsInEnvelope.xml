@@ -41,13 +41,13 @@
             var includeAnchorTabLocations = mc.getProperty('uri.var.includeAnchorTabLocations');
             var urlQuery = "";
 
-            if (includeTabs != null && includeTabs != "") {
+            if (includeTabs != "null" && includeTabs != null && includeTabs != "") {
                 urlQuery += 'include_tabs=' + includeTabs + '&';
-                    if (includeAnchorTabLocations != null && includeAnchorTabLocations != "") {
+                    if (includeAnchorTabLocations != "null" && includeAnchorTabLocations != null && includeAnchorTabLocations != "") {
                         urlQuery += 'exclude_fields=' + includeAnchorTabLocations + '&';
                        }
             }
-            if (includeExtended != null && includeExtended != "") {
+            if (includeExtended != "null" && includeExtended != null && includeExtended != "") {
                 urlQuery += 'include_extended=' + includeExtended + '&';
             }
 
