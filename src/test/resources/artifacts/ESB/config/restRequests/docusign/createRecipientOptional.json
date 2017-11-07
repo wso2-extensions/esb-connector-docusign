@@ -4,7 +4,7 @@
   "apiVersion": "%s(apiVersion)",
   "accountId": "%s(accountId)",
   "envelopeId": "%s(envelopeId)",
-  "userName": "%s(userName)",
+  "recipientUserName": "%s(userName)",
   "authenticationMethod": "%s(authenticationMethod)",
   "clientUserId": "%s(clientUserId)",
   "email": "%s(email)",

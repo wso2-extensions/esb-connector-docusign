@@ -31,7 +31,7 @@
             <property expression="json-eval($.blocking)" name="blocking"/>
             <property expression="json-eval($.grantType)" name="grantType"/>
             <property expression="json-eval($.clientId)" name="clientId"/>
-            <property expression="json-eval($.userName)" name="userName"/>
+            <property expression="json-eval($.recipientUserName)" name="recipientUserName"/>
             <property expression="json-eval($.password)" name="password"/>
             <property expression="json-eval($.scope)" name="scope"/>
             <property expression="json-eval($.includeApiPassword)" name="includeApiPassword"/>
@@ -159,7 +159,7 @@
                     <docusign.createRecipient>
                         <accountId>{$ctx:accountId}</accountId>
                         <envelopeId>{$ctx:envelopeId}</envelopeId>
-                        <userName>{$ctx:userName}</userName>
+                        <recipientUserName>{$ctx:recipientUserName}</recipientUserName>
                         <authenticationMethod>{$ctx:authenticationMethod}</authenticationMethod>
                         <clientUserId>{$ctx:clientUserId}</clientUserId>
                         <email>{$ctx:email}</email>
