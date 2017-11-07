@@ -40,7 +40,9 @@ public class DocusignConnectorIntegrationTest extends ConnectorIntegrationTestBa
      */
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-        init("docusign-connector-1.0.9-SNAPSHOT");
+        String connectorName = System.getProperty("connector_name") + "-connector-" +
+                System.getProperty("connector_version") + ".zip";
+        init(connectorName);
         esbRequestHeadersMap.put("Content-Type", "application/json");
         apiRequestHeadersMap.put("Content-Type", "application/json");
         String accessToken = connectorProperties.getProperty("accessToken");

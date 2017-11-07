@@ -11,15 +11,15 @@ Pre-requisites:
 Tested Platform: 
 
  - Microsoft WINDOWS V-7
- - UBUNTU 14.04
- - WSO2 ESB 5.0.0
+ - UBUNTU 16.04
+ - WSO2 EI6.1.1
 
 Note:
     Set up a new DocuSign account and follow all the instruction given below in step 4 to generate an access token.
 
 Steps to follow in setting integration test.
 
- 1. Download ESB 5.0.0 from official website.
+ 1. Download wso2ei-6.1.1 from official website.
 
  2. Create a DocuSign developer account using URL https://secure.docusign.com/signup/develop
         Note: Get your free developer account.
@@ -36,8 +36,19 @@ Steps to follow in setting integration test.
              This command will import DocuSign certificate into keystore.
              To import the certificate give "wso2carbon" as password. Press "Y" to complete certificate import process.
 
+                                            and
+
+             Navigate to <DOCUSIGN_CONNECTOR_HOME>/src/test/resources/keystores/products" using command prompt and execute the following command
+
+                    keytool -importcert -file CERT_FILE_NAME -keystore wso2carbon.jks -alias "CERT_NAME"
+
+             This command will import DocuSign certificate into keystore.
+             To import the certificate give "wso2carbon" as password. Press "Y" to complete certificate import process.
+
              NOTE : CERT_FILE_NAME - Replace CERT_FILE_NAME with the file name that was extracted from DocuSign with the extension. (e.g. demo.docusign.net.crt)
                     CERT_NAME - Replace CERT_NAME with an arbitrary name for the certificate. (e.g. demo.docusign.net)
+
+             Remove the copied certificate after import the certificate
 
  4. Follow the bellow mentioned steps to generate the access token:
         i)     Log in to your DocuSign account, and go to the following URLs:
@@ -51,7 +62,7 @@ Steps to follow in setting integration test.
         v)     Post to Token Endpoint to obtain the accessToken(use getOAuthToken method).
                The client user’s username, password are used, along with the client application’s integrator key (set as “clientId”).
 
- 5. Compress modified ESB as wso2esb-5.0.0.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
+ 5. Compress modified EI as wso2ei-6.1.1.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
 
  6. Update the DocuSign properties file at location "{DOCUSIGN_CONNECTOR_HOME}/src/test/resources/artifacts/ESB/connector/config" as below.
 
