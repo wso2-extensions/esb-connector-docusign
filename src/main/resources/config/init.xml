@@ -24,8 +24,17 @@
     <parameter name="userName" description="The username of the docuSign account."/>
     <parameter name="password" description="The password of the docuSign account."/>
     <parameter name="integratorKey" description="The client application’s integrator key."/>
+    <parameter name="secretKey" description="The client application’s secreat key."/>
     <parameter name="blocking"
                description="The blocking parameter is helping connector performs the blocking invocations to docuSign."/>
+    <parameter name="hostName" description="The authentication service host name"/>
+    <parameter name="intervalTime" description="Access token expiration time interval."/>
+    <parameter name="refreshToken"
+               description="RefreshToken to be used to obtain the access token."/>
+    <parameter name="registryPath"
+               description="Registry Path of the Connector where the values are stored."/>
+    <parameter name="blocking"
+               description="The blocking parameter is helping connector performs the blocking invocations to Sharepoint."/>
     <sequence>
         <property name="uri.var.apiUrl" expression="$func:apiUrl"/>
         <property name="uri.var.apiVersion" expression="$func:apiVersion"/>
@@ -34,8 +43,85 @@
         <property name="uri.var.password" expression="$func:password"/>
         <property name="uri.var.integratorKey" expression="$func:integratorKey"/>
         <property name="docusignBlocking" expression="$func:blocking"/>
-        <filter xpath="boolean($ctx:uri.var.accessToken)">
+        <property name="uri.var.refreshToken" expression="$func:refreshToken"/>
+        <property name="uri.var.hostName" expression="$func:hostName"/>
+        <property name="uri.var.secretKey" expression="$func:secretKey"/>
+        <property name="uri.var.intervalTime" expression="$func:intervalTime"/>
+        <property name="uri.var.registryPath" expression="$func:registryPath"/>
+        <filter source="(boolean($ctx:uri.var.refreshToken) and boolean($ctx:uri.var.hostName) and boolean($ctx:uri.var.secretKey) and
+                boolean($ctx:uri.var.accessToken) and boolean($ctx:uri.var.intervalTime) and boolean($ctx:uri.var.integratorKey))
+                or boolean($ctx:uri.var.accessToken)" regex="true">
             <then>
+                <filter source="boolean($ctx:uri.var.refreshToken) and boolean($ctx:uri.var.hostName) and boolean($ctx:uri.var.secretKey) and
+                        boolean($ctx:uri.var.accessToken) and boolean($ctx:uri.var.integratorKey)"
+                        regex="true">
+                    <then>
+                        <filter source="boolean($ctx:uri.var.intervalTime)" regex="false">
+                            <then>
+                                <property name="uri.var.intervalTime"
+                                          value="28000000"/>
+                            </then>
+                        </filter>
+                        <filter source="boolean(get-property('uri.var.registryPath'))" regex="false">
+                            <then>
+                                <property name="uri.var.accessTokenRegistryPath"
+                                          value="connectors/docusign/accessToken"/>
+                                <property name="uri.var.timeRegistryPath"
+                                          value="connectors/docusign/time"/>
+                            </then>
+                            <else>
+                                <property name="uri.var.accessTokenRegistryPath"
+                                          expression="fn:concat($ctx:uri.var.registryPath, '/accessToken' )"/>
+                                <property name="uri.var.timeRegistryPath"
+                                          expression="fn:concat($ctx:uri.var.registryPath, '/time' )"/>
+                            </else>
+                        </filter>
+                        <property name="uri.var.accessToken.reg"
+                                  expression="get-property('registry', $ctx:uri.var.accessTokenRegistryPath)"/>
+                        <property name="systemTime" expression="get-property('SYSTEM_TIME')"
+                                  scope="default"/>
+                        <filter source="$ctx:uri.var.accessToken.reg=''" regex="true">
+                            <then>
+                                <script language="js">
+                                    <![CDATA[
+                                        importPackage(Packages.org.apache.synapse.config);
+                                        var newAccess = mc.getProperty('uri.var.accessToken');
+                                        var newAccessRegistryPath = mc.getProperty('uri.var.accessTokenRegistryPath');
+                                        var newSysTime = mc.getProperty('systemTime');
+                                        var newTimeRegistryPath = mc.getProperty('uri.var.timeRegistryPath');
+                                        if(newAccess != null && newAccess != ''){
+                                            //Create the registry entry if no such entry exists.
+                                            mc.getConfiguration().getRegistry().newResource(newAccessRegistryPath,false);
+                                            mc.getConfiguration().getRegistry().updateResource(newAccessRegistryPath,newAccess);
+                                            mc.getConfiguration().getRegistry().newResource(newTimeRegistryPath, false);
+                                            mc.getConfiguration().getRegistry().updateResource(newTimeRegistryPath, newSysTime);
+                                        }
+                                        ]]>
+                                </script>
+                            </then>
+                            <else>
+                                <property name="uri.var.accessToken"
+                                          expression="$ctx:uri.var.accessToken.reg"/>
+                            </else>
+                        </filter>
+                        <property name="registryTime"
+                                  expression="get-property('registry', $ctx:uri.var.timeRegistryPath)"/>
+                        <script language="js"><![CDATA[
+                                var time1 = mc.getProperty("systemTime");
+                                var time2 = mc.getProperty("registryTime");
+                                var timeTaken = time1 - time2;
+                                mc.setProperty("INTERVAL_TIME", timeTaken);
+                               ]]>
+                        </script>
+                        <property name="docusignBlocking" expression="$func:blocking"/>
+                        <filter source="$ctx:INTERVAL_TIME &gt;$ctx:uri.var.intervalTime or $ctx:uri.var.accessToken=''"
+                                regex="true">
+                            <then>
+                                <docusign.getAccessTokenFromRefreshToken/>
+                            </then>
+                        </filter>
+                    </then>
+                </filter>
                 <header name="Authorization" expression="fn:concat('Bearer ', $ctx:uri.var.accessToken)" scope="transport"/>
             </then>
             <else>

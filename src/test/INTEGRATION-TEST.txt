@@ -50,17 +50,62 @@ Steps to follow in setting integration test.
 
              Remove the copied certificate after import the certificate
 
- 4. Follow the bellow mentioned steps to generate the access token:
-        i)     Log in to your DocuSign account, and go to the following URLs:
+ 4. Follow the bellow mentioned steps to generate the access token and refresh token:
+        i)   Log in to your DocuSign account, and go to the following URLs:
                    https://demo.docusign.net/Member/MemberLogin.aspx?event=logout
-        ii)    Go to Admin: This can be done from your DocuSign account by selecting the Go to Admin link in the account settings drop-down menu.
-        iii)   In DocuSign Admin, click API and Keys in the left navigation panel and click ADD INTEGRATOR KEY.
-        iv)    Click ADD to save the integrator key information.
-        v)     Now you got the Integration key.In order to communicate with the DocuSign OAuth service,
-               you will need an integrator key, which will serve as your client id,
+        ii)  Get the integrator key and secret key.
+             i.    Log in to DocuSign Admin
+                   From your development account, select Go to Admin in the account settings drop-down menu.
+             ii.   In DocuSign Admin, click API and Keys in the left navigation panel.
+             iii.  Click ADD INTEGRATOR KEY.
+             iv.   Add a description for your application and click  ADD to generate the integrator key.
+             v.    The OAuth methods require you to provide a redirect URI for your application.
+                   When your application sends an authorization request to DocuSign, it includes the redirect URI in the request.
+             vi.   To generate a new secret key, click ADD SECRET KEY.
+             vii.  Copy the secret key to a secure location immediately after you create it.
+                   Secret keys are displayed in plain text only when they are first created.
+             VII.  Click save.
+
+             Now we have the integrator key and secret key. We will need an integrator key, which will serve as your client_id
+
+
+        iii) Generate the Authentication Code
+             To begin the Authentication Code Grant,
+             you would direct the user to https://account-d.docusign.com/oauth/auth , with the following query parameters.
+
+                   https://account-d.docusign.com/oauth/auth?
+                      response_type=code
+                     &scope=signature
+                     &client_id=230546a7-9c55-40ad-8fbf-af205d5494ad  &redirect_uri=http://www.example.com/callback
+
+             If the authentication is successful, the authentication service redirects the user to the redirect_uri.
+             The callback contains a code that you will exchange for a token in the next step.
+
+
+        iv)   Generate the access token and refresh token
+              Make a POST request to https://account-d.docusign.com/oauth/token with the following headers and parameters.
+
+              The Authorization header contains the word Basic and the base64 representation of your integrator key
+              and the secret key you generated when you set up the integration in DocuSign Admin.
+              The two keys are concatenated with a colon :.
+
+              The body of the POST request needs two parameters:
+              grant_type -	Must be authorization_code to exchange an authorization code for an access token.
+              code	-	The authorization code that you received from the callback
+
+              With the Authorization header and the body parameters, the POST request would look like this.
+              Note that the Content-Type: application/x-www-form-urlencoded header is also required.
+
+                   POST /oauth/token
+                   Content-Type: application/x-www-form-urlencoded
+                   Authorization: Basic MjMwNTQ2YTctOLThmYm2LTY4MmM3YmYyNzZlOQ==
+
+                   grant_type=authorization_code&code=eyJ0eX...ei0iLIFk3A
+
+              If the request is successful. It will give the access_token and refresh_token.
+              (for more information https://docs.docusign.com/esign/guide/authentication/oa2_auth_code.html)
+
         vi)    To obtain the baseUrl, Call the getLoginInformation API method call(e.g. https://demo.docusign.net/restapi/v2/)
-        v)     Post to Token Endpoint to obtain the accessToken(use getOAuthToken method).
-               The client user’s username, password are used, along with the client application’s integrator key (set as “clientId”).
 
  5. Compress modified EI as wso2ei-6.1.1.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
 

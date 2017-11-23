@@ -22,13 +22,9 @@
             <file>init.xml</file>
             <description>Initial configuration file for docuSign rest connector.</description>
         </component>
-        <component name="getOAuthToken">
-            <file>getOAuthToken.xml</file>
-            <description>Creates an authorization token.</description>
-        </component>
-        <component name="revokeOAuthToken">
-            <file>revokeOAuthToken.xml</file>
-            <description>Revoking the Access Token.</description>
+        <component name="getAccessTokenFromRefreshToken">
+            <file>getAccessTokenFromRefreshToken.xml</file>
+            <description>Initial configuration file for docuSign rest connector.</description>
         </component>
     </subComponents>
 </component>
