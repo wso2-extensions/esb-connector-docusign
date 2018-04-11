@@ -12,14 +12,14 @@ Tested Platform:
 
  - Microsoft WINDOWS V-7
  - UBUNTU 16.04
- - WSO2 EI6.1.1
+ - WSO2 EI6.2.0
 
 Note:
     Set up a new DocuSign account and follow all the instruction given below in step 4 to generate an access token.
 
 Steps to follow in setting integration test.
 
- 1. Download wso2ei-6.1.1 from official website.
+ 1. Download wso2ei-6.2.0 from official website.
 
  2. Create a DocuSign developer account using URL https://secure.docusign.com/signup/develop
         Note: Get your free developer account.
@@ -27,7 +27,7 @@ Steps to follow in setting integration test.
  3. Follow the below mentioned steps to add valid certificate to access DocuSign API over https.
 
         i)   Download the certificate by clicking Demo SSL Certificate link by navigating to 'https://trust.docusign.com/en-us/trust-certifications/docusign-public-certificates/'
-        ii)  Go to new ESB 5.0.0 folder and place the downloaded certificate into "<ESB_HOME>/repository/resources/security/" and
+        ii)  Go to new ESB 6.2.0 folder and place the downloaded certificate into "<ESB_HOME>/repository/resources/security/" and
              "<DOCUSIGN_CONNECTOR_HOME>src/test/resources/keystores/products" folders.
         iii) Navigate to "<ESB_HOME>/repository/resources/security/" using command prompt and execute the following command.
 
@@ -107,7 +107,7 @@ Steps to follow in setting integration test.
 
         vi)    To obtain the baseUrl, Call the getLoginInformation API method call(e.g. https://demo.docusign.net/restapi/v2/)
 
- 5. Compress modified EI as wso2ei-6.1.1.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
+ 5. Compress modified EI as wso2ei-6.2.0.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
 
  6. Update the DocuSign properties file at location "{DOCUSIGN_CONNECTOR_HOME}/src/test/resources/artifacts/ESB/connector/config" as below.
 
@@ -144,4 +144,4 @@ Steps to follow in setting integration test.
     xxxi)   pingFrequency           -  The interval, in seconds, between pings on the ping URL. Only used if pingUrl is specified.
 
  7. Navigate to "{DOCUSIGN_CONNECTOR_HOME}" and run the following command.
-      $ mvn clean install
+      $ mvn clean install -Dskip-tests=false
