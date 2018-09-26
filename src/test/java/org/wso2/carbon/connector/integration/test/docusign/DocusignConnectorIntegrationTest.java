@@ -19,6 +19,7 @@
  */
 package org.wso2.carbon.connector.integration.test.docusign;
 
+import org.apache.commons.codec.binary.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -40,13 +41,37 @@ public class DocusignConnectorIntegrationTest extends ConnectorIntegrationTestBa
      */
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
+
+        addCertificatesToEIKeyStore("client-truststore.jks", "wso2carbon");
+
         String connectorName = System.getProperty("connector_name") + "-connector-" +
                 System.getProperty("connector_version") + ".zip";
         init(connectorName);
+        getApiConfigProperties();
+        getAccessToken();
         esbRequestHeadersMap.put("Content-Type", "application/json");
         apiRequestHeadersMap.put("Content-Type", "application/json");
         String accessToken = connectorProperties.getProperty("accessToken");
         apiRequestHeadersMap.put("Authorization", "Bearer " + accessToken);
+    }
+
+    private void getAccessToken() throws IOException, JSONException {
+
+        Map<String, String> apiTokenRequestHeadersMap = new HashMap<String, String>();
+        Map<String, String> apiParametersMap = new HashMap<String, String>();
+        apiTokenRequestHeadersMap.put("Content-Type", "application/x-www-form-urlencoded");
+        String encoded = new String(Base64.encodeBase64((connectorProperties.getProperty("integrationKey") + ":" +
+                connectorProperties.getProperty("secretKey")).getBytes()));
+        apiTokenRequestHeadersMap.put("Authorization", "Basic " + encoded);
+
+        RestResponse<JSONObject> apiTokenRestResponse =
+                sendJsonRestRequest(connectorProperties.getProperty("hostName") +
+                                "/oauth/token?grant_type=refresh_token&refresh_token=" +
+                                connectorProperties.getProperty("refreshToken"), "POST",
+                        apiTokenRequestHeadersMap, "", apiParametersMap);
+
+        String accessToken = apiTokenRestResponse.getBody().get("access_token").toString();
+        connectorProperties.put("accessToken",accessToken);
     }
 
     /**
@@ -63,6 +88,22 @@ public class DocusignConnectorIntegrationTest extends ConnectorIntegrationTestBa
         String apiEndPoint = connectorProperties.getProperty("apiUrl") + "/restapi/" +
                 connectorProperties.getProperty("apiVersion") + "/login_information";
         RestResponse<JSONObject> apiRestResponse = sendJsonRestRequest(apiEndPoint, "GET", apiRequestHeadersMap);
+
+        String apiUserEndPoint = connectorProperties.getProperty("apiUrl") + "/restapi/" +
+                connectorProperties.getProperty("apiVersion") + "/accounts/" + accountId + "/users";
+        RestResponse<JSONObject> apiUserRestResponse = sendJsonRestRequest(apiUserEndPoint, "GET", apiRequestHeadersMap);
+        String userId = apiUserRestResponse.getBody().getJSONArray("users").getJSONObject(0).getString("userId");
+        connectorProperties.setProperty("clientUserId", userId);
+        connectorProperties.setProperty("recipients",
+                connectorProperties.getProperty("recipients").replace("<clientUserId>", userId));
+
+        String apiTemplateEndPoint = connectorProperties.getProperty("apiUrl") + "/restapi/" +
+                connectorProperties.getProperty("apiVersion") + "/accounts/" + accountId + "/templates";
+        RestResponse<JSONObject> apiTemplateRestResponse = sendJsonRestRequest(apiTemplateEndPoint, "POST", apiRequestHeadersMap,
+        "apiCreateTemplate.json");
+        String templateId = apiTemplateRestResponse.getBody().getString("templateId");
+        connectorProperties.setProperty("templateId", templateId);
+
         Assert.assertEquals(esbRestResponse.getHttpStatusCode(), 200);
         Assert.assertEquals(apiRestResponse.getHttpStatusCode(), 200);
         Assert.assertEquals(esbRestResponse.getBody().getJSONArray("loginAccounts").getJSONObject(0).getString("accountId"),
@@ -72,7 +113,7 @@ public class DocusignConnectorIntegrationTest extends ConnectorIntegrationTestBa
     /**
      * Positive test case for getLoginInformation method with optional parameters.
      */
-    @Test(groups = {"wso2.esb"},
+    @Test(groups = {"wso2.esb"}, dependsOnMethods = {"testGetLoginInformationWithMandatoryParameters"},
             description = "docusign{getLoginInformation} integration test with optional parameters.")
     public void testGetLoginInformationWithOptionalParameters() throws IOException, JSONException {
         esbRequestHeadersMap.put("Action", "urn:getLoginInformation");
@@ -513,7 +554,7 @@ public class DocusignConnectorIntegrationTest extends ConnectorIntegrationTestBa
                 esbRequestHeadersMap, "sendDraftEnvelopeMandatory.json");
         String apiEndPoint = connectorProperties.getProperty("apiUrl") + "/restapi/" +
                 connectorProperties.getProperty("apiVersion") + "/accounts/" + connectorProperties.getProperty("accountId")
-                + "/envelopes/" + connectorProperties.getProperty("draftEnvelopeId");
+                + "/envelopes/" + connectorProperties.getProperty("envelopeId");
         RestResponse<JSONObject> apiRestResponse = sendJsonRestRequest(apiEndPoint, "GET", apiRequestHeadersMap);
         Assert.assertEquals(esbRestResponse.getHttpStatusCode(), 200);
         Assert.assertEquals(apiRestResponse.getHttpStatusCode(), 200);

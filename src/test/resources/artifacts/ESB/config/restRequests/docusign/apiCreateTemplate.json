@@ -1,0 +1,17 @@
+{
+  "envelopeTemplateDefinition": {
+    "name": "testApi",
+    "shared": "true",
+    "password": "sample string 4",
+    "newPassword": "sample string 5",
+    "description": "sample string 6",
+    "created": "sample string 7"
+  },
+  "documents":[
+    {"documentBase64":"V2UgYW5hbHl6ZWQgdGhlIGVycm9yIGxvZyBhbmQgdGhlIHJvb3RjYXVzZSBmb3IgdGhhdCBlcnJvciBpcyBpZiBudWxsIG9yIGVtcHR5IHN0cmluZ3Mg",
+      "documentId":"1",
+      "fileExtension":"txt",
+      "name":"myproxy"
+    }
+  ]
+}

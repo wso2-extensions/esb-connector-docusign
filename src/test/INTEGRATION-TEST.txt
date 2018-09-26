@@ -6,49 +6,28 @@ Pre-requisites:
  - Java 1.6 or above
  - The org.wso2.esb.integration.integration-base project is required. The test suite has been configured to download this project automatically.
    If the automatic download fails, download the following project and compile it using the mvn clean install command to update your local repository:
-   https://github.com/wso2-dev/esb-connectors/tree/master/integration-base
+   https://github.com/wso2-extensions/esb-integration-base
 
 Tested Platform: 
 
  - Microsoft WINDOWS V-7
  - UBUNTU 16.04
- - WSO2 EI6.2.0
+ - WSO2 EI 6.4.0
 
 Note:
     Set up a new DocuSign account and follow all the instruction given below in step 4 to generate an access token.
 
 Steps to follow in setting integration test.
 
- 1. Download wso2ei-6.2.0 from official website.
+ 1. Download wso2ei-6.4.0 from official website.
 
  2. Create a DocuSign developer account using URL https://secure.docusign.com/signup/develop
         Note: Get your free developer account.
 
  3. Follow the below mentioned steps to add valid certificate to access DocuSign API over https.
 
-        i)   Download the certificate by clicking Demo SSL Certificate link by navigating to 'https://trust.docusign.com/en-us/trust-certifications/docusign-public-certificates/'
-        ii)  Go to new ESB 6.2.0 folder and place the downloaded certificate into "<ESB_HOME>/repository/resources/security/" and
-             "<DOCUSIGN_CONNECTOR_HOME>src/test/resources/keystores/products" folders.
-        iii) Navigate to "<ESB_HOME>/repository/resources/security/" using command prompt and execute the following command.
-
-                    keytool -importcert -file CERT_FILE_NAME -keystore client-truststore.jks -alias "CERT_NAME"
-
-             This command will import DocuSign certificate into keystore.
-             To import the certificate give "wso2carbon" as password. Press "Y" to complete certificate import process.
-
-                                            and
-
-             Navigate to <DOCUSIGN_CONNECTOR_HOME>/src/test/resources/keystores/products" using command prompt and execute the following command
-
-                    keytool -importcert -file CERT_FILE_NAME -keystore wso2carbon.jks -alias "CERT_NAME"
-
-             This command will import DocuSign certificate into keystore.
-             To import the certificate give "wso2carbon" as password. Press "Y" to complete certificate import process.
-
-             NOTE : CERT_FILE_NAME - Replace CERT_FILE_NAME with the file name that was extracted from DocuSign with the extension. (e.g. demo.docusign.net.crt)
-                    CERT_NAME - Replace CERT_NAME with an arbitrary name for the certificate. (e.g. demo.docusign.net)
-
-             Remove the copied certificate after import the certificate
+        i)   Download the certificate by clicking Demo SSL Certificate link by navigating to 'https://trust.docusign.com/en-us/trust-certifications/docusign-public-certificates/' and place it
+             in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
 
  4. Follow the bellow mentioned steps to generate the access token and refresh token:
         i)   Log in to your DocuSign account, and go to the following URLs:
@@ -107,41 +86,31 @@ Steps to follow in setting integration test.
 
         vi)    To obtain the baseUrl, Call the getLoginInformation API method call(e.g. https://demo.docusign.net/restapi/v2/)
 
- 5. Compress modified EI as wso2ei-6.2.0.zip and copy that zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
+ 5. Place the wso2ei-6.4.0.zip file in to location "{DOCUSIGN_CONNECTOR_HOME}/repository/".
 
- 6. Update the DocuSign properties file at location "{DOCUSIGN_CONNECTOR_HOME}/src/test/resources/artifacts/ESB/connector/config" as below.
+ 6. Update the esb-connector-docusign.properties file at location "{DOCUSIGN_CONNECTOR_HOME}/repository".
+
+ 7. Following are the properties used in the 'esb-connector-docusign.properties' file and docusign properties file at location "<DOCUSIGN_CONNECTOR_HOME>/src/test/resources/artifacts/ESB/connector/config" to run the integration tests.
 
     i) 		apiUrl					- Base endpoint URL to access the DocuSign API "https://demo.docusign.net".
-    ii)		accessToken				- Access Token obtained by following the steps in 4.
-    iii) 	grantType		        - Use password as grantType..
-    iv)		username          		- The username of the DocuSign account.
-    v)		password	 		    - The password of the DocuSign account.
-    vi) 	scope	 	            - The scope is always set to "api".
+    ii)		hostName				- The token endpoint.
+    iii) 	integrationKey		    - The integration key.
+    iv)		secretKey          		- The secret key.
+    v)		apiVersion              - The version of the DocuSign API.
+    vi) 	refreshToken	 	    - The refresh token.
     vii)	includeApiPassword		- (optional) When set to true, returns api_password in the response.
     viii)	includeAccountIDGuid	- (optional) When set to true, shows the account ID GUID in the response.
     ix)		loginSetting			- (optional) Determines whether login settings are returned in the response (valid values: all, none).
-    x)		accountId				- The ID of the account.
-    xi)		envelopeId				- The ID of the envelope whose documents you want to retrieve.
-    xii)	documentId			    - The ID of the document to retrieve.
-    xiii)   apiVersion              - The version of the DocuSign API.
-    xiv)    signers                 - Contains information about the signers.
-    xv)     carbonCopies            - Recipients who should receive a copy of the envelope.
-    xvi)    agents                  - Defines the management and access rights of each recipient assigned as an agent on the document
-    xvii)   status                  - The status of the envelope. Set this property to created to save a draft of the envelope, or set it to sent to send it immediately to the recipients.
-    xviii)  emailSubject            - The subject of the email used to send the envelope.
-    xix)    templateRoles           - Specifies the template recipients. Each roleName in the template must have a recipient assigned to it.
-    xx)     tamplteId               - The ID of the template to use.
-    xxi)    authenticationMehod     - The method to use to authenticate the recipient/signer.
-    xxii)   clientUserId            -  sender-created value. If provided, the recipient is treated as an embedded (captive) recipient or signer.
-    xxiii)  email                   - Specifies the email of the recipient.
-    xxiv)   returnUrl               - The URL the recipient is redirected to after the signing session has ended.
-    xxv)    userId                  - Specifies the user ID of the recipient. You can use user ID or use email and user name together to identify the recipient.
-    xxvi)   blocking                - The blocking parameter is helping connector performs the blocking invocations to DocuSign.
-    xxvii)  pingUrl                 - A client URL to be pinged by the DocuSign Signing experience to indicate to the client that signing is active.
-    xxviii) recipientId             - A unique ID for the recipient that is used by the tab element to indicate which recipient is to sign the Document.
-    xxvix)  authenticationInstant   - A sender-generated value that indicates the date/time that the signer was authenticated.
-    xxx)    assertionId             - The unique ID of the authentication event executed by the client application.
-    xxxi)   pingFrequency           -  The interval, in seconds, between pings on the ping URL. Only used if pingUrl is specified.
+    x)      signers                 - Contains information about the signers.
+    xi)     status                  - The status of the envelope. Set this property to created to save a draft of the envelope, or set it to sent to send it immediately to the recipients.
+    xii)    emailSubject            - The subject of the email used to send the envelope.
+    xiii)   templateRoles           - Specifies the template recipients. Each roleName in the template must have a recipient assigned to it.
+    xiv)    email                   - Specifies the email of the recipient.
+    xv)     returnUrl               - The URL the recipient is redirected to after the signing session has ended.
+    xvi)    recipients              - Contains information about the recipients.
+    xvii)   authenticationMehod     - The method to use to authenticate the recipient/signer.
+    xviii)  documents               - Contains information about the documents.
+    xix)    userName                - The username.
 
- 7. Navigate to "{DOCUSIGN_CONNECTOR_HOME}" and run the following command.
+ 8. Navigate to "{DOCUSIGN_CONNECTOR_HOME}" and run the following command.
       $ mvn clean install -Dskip-tests=false
