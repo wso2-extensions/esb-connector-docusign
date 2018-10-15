@@ -3,6 +3,6 @@
   "apiUrl": "%s(apiUrl)",
   "apiVersion": "%s(apiVersion)",
   "accountId": "%s(accountId)",
-  "envelopeId":"%s(draftEnvelopeId)",
+  "envelopeId":"%s(envelopeId)",
   "status": "%s(status)"
 }

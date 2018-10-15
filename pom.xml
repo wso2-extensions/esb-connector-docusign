@@ -28,8 +28,8 @@
     <url>http://wso2.org</url>
     <properties>
         <connector.name>docusign</connector.name>
-        <product.ei.version>6.2.0</product.ei.version>
-        <integration.base.version>1.0.2</integration.base.version>
+        <product.ei.version>6.4.0</product.ei.version>
+        <integration.base.version>1.0.3</integration.base.version>
         <carbon.kernel.version>4.4.17</carbon.kernel.version>
         <automation.framework.utils.version>4.4.2</automation.framework.utils.version>
         <automation.framework.version>4.4.3</automation.framework.version>
