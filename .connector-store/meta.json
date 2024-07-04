@@ -1,0 +1,23 @@
+{
+    "name": "DocuSign",
+    "owner": "WSO2",
+    "category": "Communication",
+    "documentationUrl": "https://docs.wso2.com/display/ESBCONNECTORS/DocuSign+Connector",
+    "description": "The DocuSign connector allows you to access the DocuSign REST API through WSO2 ESB. DocuSign is the most secure and globally trusted platform for adding legally binding signatures, forms, and document workflows to your web, mobile, or desktop app or service.",
+    "status": "Active",
+    "labels": [
+        "connector"
+    ],
+    "releases": [
+        {
+            "tag_name": "v1.0.9",
+            "products": [
+                "EI 6.4.0",
+                "EI 6.3.0",
+                "ESB 5.0.0",
+                "ESB 4.9.0"
+            ],
+            "isHidden": false
+        }
+    ]
+}
